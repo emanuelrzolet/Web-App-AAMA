@@ -1,0 +1,92 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static admin_urls %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/forms.css' %}">
+<style>
+    .animal-type-form {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .animal-type-form ul {
+        list-style: none;
+        padding: 0;
+    }
+    .animal-type-form li {
+        margin: 10px 0;
+    }
+    .animal-type-form label {
+        display: block;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .animal-type-form label:hover {
+        background-color: #f8f9fa;
+    }
+    .animal-type-form input[type="radio"]:checked + label {
+        background-color: #79aec8;
+        color: white;
+        border-color: #417690;
+    }
+    .animal-type-form input[type="radio"] {
+        display: none;
+    }
+    .submit-row {
+        text-align: right;
+        margin-top: 20px;
+    }
+    
+    /* Estilos para o campo tipo quando readonly */
+    select[readonly],
+    select[disabled],
+    .readonly-select {
+        background-color: #f8f9fa !important;
+        border-color: #ddd !important;
+        color: #666 !important;
+        cursor: not-allowed !important;
+    }
+    
+    select[readonly] option,
+    select[disabled] option,
+    .readonly-select option {
+        color: #666 !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <div class="animal-type-form">
+        <h2>{{ title }}</h2>
+        <p>Selecione o tipo de animal que você deseja cadastrar:</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            
+            <div class="fieldset">
+                {% for radio in form.tipo %}
+                <div class="radio-item">
+                    {{ radio.tag }}
+                    <label for="{{ radio.id_for_label }}">
+                        {{ radio.choice_label }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="submit-row">
+                <input type="submit" value="Continuar" class="default" name="_continue">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

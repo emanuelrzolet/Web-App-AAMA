@@ -1,0 +1,384 @@
+/* Temas */
+:root {
+	/* Tema Claro */
+	--primary-color: #ffd700;
+	--primary-hover: #ffe44d;
+	--light-bg: #ffffff;
+	--light-bg-secondary: #f8f9fa;
+	--light-text: #212529;
+	--dark-bg: #1a1a1a;
+	--dark-bg-secondary: #2d2d2d;
+	--dark-text: #ffffff;
+	--text-color: #333333;
+	--background-color: #ffffff;
+	--card-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+	/* Tema Escuro */
+	--bs-body-bg: var(--dark-bg);
+	--bs-body-color: var(--dark-text);
+	--primary-color: #ffd700;
+	--secondary-color: #2d2d2d;
+	--text-color: #ffffff;
+	--light-text: #cccccc;
+	--background-color: #1a1a1a;
+	--card-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+	--dark-mode-invert: 1;
+}
+
+[data-theme="light"] {
+	--dark-mode-invert: 0;
+}
+
+/* Estilos Gerais */
+body {
+	font-family: "Poppins", sans-serif;
+	background-color: var(--bs-body-bg);
+	color: var(--bs-body-color);
+	transition: all 0.3s ease;
+}
+
+/* Navbar */
+.navbar {
+	background-color: var(--bs-body-bg);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	padding: 1rem 0;
+}
+
+.navbar-brand {
+	font-weight: 600;
+	font-size: 1.5rem;
+	color: var(--bs-body-color);
+	display: flex;
+	align-items: center;
+	line-height: 1;
+	padding: 0;
+}
+
+.navbar-brand:hover {
+	color: var(--primary-color);
+}
+
+.navbar-brand .fa-paw {
+	font-size: 1.3rem;
+	color: var(--primary-color);
+}
+
+/* Ajustes para o ícone do menu */
+.navbar-toggler {
+	border-color: var(--bs-body-color);
+	padding: 0.5rem;
+	color: var(--bs-body-color);
+}
+
+.navbar-toggler:focus {
+	box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+}
+
+.navbar-toggler .navbar-toggler-icon {
+	background-image: var(--bs-navbar-toggler-icon-bg);
+	filter: invert(var(--dark-mode-invert));
+}
+
+.nav-link {
+	font-weight: 500;
+	color: var(--bs-body-color);
+}
+
+.nav-link:hover {
+	color: var(--primary-color);
+}
+
+/* Botão de Tema */
+.theme-toggle {
+	background: none;
+	border: none;
+	color: var(--bs-body-color);
+	font-size: 1.2rem;
+	padding: 0.5rem;
+	cursor: pointer;
+	transition: transform 0.2s;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.theme-toggle:hover {
+	transform: scale(1.1);
+	color: var(--primary-color);
+}
+
+/* Botões */
+.btn-primary {
+	background-color: var(--primary-color);
+	border-color: var(--primary-color);
+	color: var(--dark-bg);
+	font-weight: 500;
+}
+
+.btn-primary:hover {
+	background-color: var(--primary-hover);
+	border-color: var(--primary-hover);
+	color: var(--dark-bg);
+}
+
+.btn-secondary {
+	background-color: transparent;
+	border: 1px solid var(--primary-color);
+	color: var(--bs-body-color);
+}
+
+.btn-secondary:hover {
+	background-color: var(--primary-color);
+	border-color: var(--primary-color);
+	color: var(--dark-bg);
+}
+
+.btn-link {
+	color: var(--bs-body-color);
+	text-decoration: none;
+}
+
+.btn-link:hover {
+	color: var(--primary-color);
+}
+
+/* Footer */
+footer {
+	background-color: var(--bs-body-bg);
+	padding: 3rem 0;
+	margin-top: 2rem;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] footer {
+	border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+footer h5 {
+	color: var(--primary-color);
+	margin-bottom: 1.5rem;
+}
+
+footer a {
+	color: var(--bs-body-color);
+	text-decoration: none;
+}
+
+footer a:hover {
+	color: var(--primary-color);
+}
+
+/* Chat Container */
+.chat-container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 2rem;
+}
+
+.chat-message {
+	background-color: var(--bs-body-bg);
+	border-radius: 15px;
+	padding: 2rem;
+	margin-bottom: 2rem;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .chat-message {
+	background-color: var(--dark-bg-secondary);
+}
+
+/* Animal Cards */
+.animal-card {
+	background-color: var(--bs-body-bg);
+	border-radius: 15px;
+	overflow: hidden;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s;
+}
+
+.animal-card:hover {
+	transform: translateY(-5px);
+}
+
+.animal-card img {
+	width: 100%;
+	height: 250px;
+	object-fit: cover;
+}
+
+.animal-info {
+	padding: 1.5rem;
+}
+
+.animal-name {
+	font-size: 1.25rem;
+	margin-bottom: 0.5rem;
+}
+
+.animal-meta {
+	color: #6c757d;
+	font-size: 0.9rem;
+	margin-bottom: 1rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+	.chat-container {
+		padding: 1rem;
+	}
+
+	.chat-message {
+		padding: 1.5rem;
+	}
+
+	.navbar-brand {
+		font-size: 1.2rem;
+	}
+
+	.navbar-brand .fa-paw {
+		font-size: 1.2rem;
+	}
+
+	.theme-toggle {
+		font-size: 1rem;
+		padding: 0.4rem;
+	}
+}
+
+/* Animal Detail Page */
+.animal-photos img {
+	width: 100%;
+	height: 400px;
+	object-fit: cover;
+	border-radius: 15px;
+}
+
+.info-group {
+	background-color: var(--secondary-color);
+	border-radius: 10px;
+	padding: 1.5rem;
+}
+
+.info-item {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 0.75rem;
+	padding-bottom: 0.75rem;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.info-item:last-child {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	border-bottom: none;
+}
+
+.info-item .label {
+	color: var(--light-text);
+	font-weight: 500;
+}
+
+.info-item .value {
+	color: var(--text-color);
+	font-weight: 600;
+}
+
+.vaccine-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.vaccine-item {
+	display: flex;
+	align-items: center;
+	padding: 0.5rem;
+	background-color: rgba(255, 255, 255, 0.1);
+	border-radius: 5px;
+}
+
+.adoption-steps {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.step {
+	display: flex;
+	gap: 1rem;
+	align-items: flex-start;
+}
+
+.step-number {
+	width: 30px;
+	height: 30px;
+	background-color: var(--primary-color);
+	color: var(--text-color);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 600;
+	flex-shrink: 0;
+}
+
+.step-content {
+	flex: 1;
+}
+
+.step-content ul li {
+	margin-bottom: 0.5rem;
+}
+
+.step-content ul li:last-child {
+	margin-bottom: 0;
+}
+
+/* Form Styles */
+.filters {
+	background-color: var(--secondary-color);
+	border-radius: 15px;
+	padding: 1.5rem;
+}
+
+.form-label {
+	color: var(--text-color);
+	font-weight: 500;
+	margin-bottom: 0.5rem;
+}
+
+.form-select,
+.form-control {
+	background-color: var(--background-color);
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	color: var(--text-color);
+	border-radius: 10px;
+	padding: 0.75rem;
+}
+
+.form-select:focus,
+.form-control:focus {
+	border-color: var(--primary-color);
+	box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+}
+
+/* Dropdown */
+.dropdown-menu {
+	background-color: var(--bs-body-bg);
+	border-color: rgba(255, 215, 0, 0.15);
+}
+
+.dropdown-item {
+	color: var(--bs-body-color);
+}
+
+.dropdown-item:hover {
+	background-color: var(--primary-color);
+	color: var(--dark-bg);
+}
+
+.dropdown-divider {
+	border-top-color: rgba(255, 215, 0, 0.15);
+}

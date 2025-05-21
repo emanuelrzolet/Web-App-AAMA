@@ -1,0 +1,145 @@
+{% extends 'core/base.html' %} {% block title %}{{ animal.nome }}{% endblock %}
+{% block content %}
+<div class="container">
+	<div class="chat-container">
+		<div class="chat-message">
+			<div class="d-flex align-items-center mb-4">
+				<a
+					href="{% url 'animal_list' %}"
+					class="btn btn-link text-decoration-none"
+				>
+					<i class="fas fa-arrow-left me-2"></i>Voltar
+				</a>
+				<h1 class="h3 mb-0 ms-3">{{ animal.nome }}</h1>
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="animal-photos mb-4">
+						<img
+							src="{{ animal.fotos.url }}"
+							class="img-fluid rounded"
+							alt="{{ animal.nome }}"
+						/>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="animal-info">
+						<div class="info-group mb-4">
+							<h2 class="h4 mb-3">Informações Básicas</h2>
+							<div class="info-item">
+								<span class="label">Idade:</span>
+								<span class="value">{{ animal.idadeEstimada }} meses</span>
+							</div>
+							<div class="info-item">
+								<span class="label">Sexo:</span>
+								<span class="value">{{ animal.get_genero_display }}</span>
+							</div>
+							<div class="info-item">
+								<span class="label">Comportamento:</span>
+								<span class="value"
+									>{{ animal.get_comportamento_display }}</span
+								>
+							</div>
+							<div class="info-item">
+								<span class="label">Pelagem:</span>
+								<span class="value">{{ animal.get_pelagem_display }}</span>
+							</div>
+							<div class="info-item">
+								<span class="label">Cor:</span>
+								<span class="value">{{ animal.cor }}</span>
+							</div>
+							<div class="info-item">
+								<span class="label">Castrado:</span>
+								<span class="value"
+									>{% if animal.castrado %}Sim{% else %}Não{% endif %}</span
+								>
+							</div>
+						</div>
+
+						{% if animal.vacinas.all %}
+						<div class="info-group mb-4">
+							<h2 class="h4 mb-3">Carteira de Vacinação</h2>
+							<div class="vaccine-list">
+								{% for dose in animal.vacinas.all %}
+								<div class="vaccine-item">
+									<i class="fas fa-syringe me-2"></i>
+									<span>{{ dose.vacina.nome }}</span>
+									<small class="text-muted ms-2"
+										>{{ dose.data_aplicacao|date:"d/m/Y" }}</small
+									>
+								</div>
+								{% endfor %}
+							</div>
+						</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="chat-message">
+			<h2 class="h4 mb-3">Processo de Adoção</h2>
+			<div class="adoption-steps mb-4">
+				<div class="step">
+					<div class="step-number">1</div>
+					<div class="step-content">
+						<h3 class="h5">Requisitos Básicos</h3>
+						<ul class="list-unstyled">
+							<li><i class="fas fa-check me-2"></i>Ser maior de 18 anos</li>
+							<li><i class="fas fa-check me-2"></i>Ter um ambiente adequado</li>
+							<li><i class="fas fa-check me-2"></i>Passar por entrevista</li>
+							<li>
+								<i class="fas fa-check me-2"></i>Assinar termo de
+								responsabilidade
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="text-center">
+				{% if user.is_authenticated %}
+				<button class="btn btn-primary btn-lg" id="btn-adotar">
+					<i class="fas fa-heart me-2"></i>Quero Adotar
+				</button>
+				{% else %}
+				<a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+					<i class="fas fa-sign-in-alt me-2"></i>Faça login para adotar
+				</a>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %} {% block extra_js %} {% if user.is_authenticated %}
+<script>
+	document.getElementById('btn-adotar').addEventListener('click', function() {
+	    if (confirm('Tem certeza que deseja iniciar o processo de adoção?')) {
+	        fetch('/api/adocao/', {
+	            method: 'POST',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+	            },
+	            body: JSON.stringify({
+	                animal_id: {{ animal.id }}
+	            })
+	        })
+	        .then(response => response.json())
+	        .then(data => {
+	            if (data.success) {
+	                alert('Solicitação de adoção enviada com sucesso!');
+	                window.location.reload();
+	            } else {
+	                alert(data.error || 'Erro ao processar a solicitação.');
+	            }
+	        })
+	        .catch(error => {
+	            console.error('Erro:', error);
+	            alert('Erro ao processar a solicitação.');
+	        });
+	    }
+	});
+</script>
+{% endif %} {% endblock %}

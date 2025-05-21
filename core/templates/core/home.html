@@ -1,0 +1,138 @@
+{% extends 'core/base.html' %}
+{% block title %}Início{% endblock title %}
+{% block content %}
+<div class="chat-container">
+	<div class="welcome-message chat-message">
+		<h1 class="h3">Bem-vindo à AAMA</h1>
+		<p>
+			Nós somos uma instituição dedicada ao resgate de animais, oferecemos uma
+			nova vida a eles.
+		</p>
+		<p>Adote! Explore os perfis de nossos cães e gatos.</p>
+		<div class="text-center">
+			<a href="{% url 'animal_list' %}" class="btn btn-primary">Conhecer AAMA</a>
+		</div>
+	</div>
+
+	<div class="chat-message">
+		<h2 class="h4 mb-3">Como ajudar?</h2>
+		<div class="help-options">
+			<div class="option mb-3">
+				<h3 class="h5">Adoção Responsável</h3>
+				<p>
+					Você sabia que ao adotar um animal você está dando uma nova chance
+					para ele? Faça parte dessa mudança.
+				</p>
+				<a href="{% url 'animal_list' %}" class="btn btn-primary btn-sm">Saber mais</a>
+			</div>
+			<div class="option mb-3">
+				<h3 class="h5">Seja Voluntário</h3>
+				<p>
+					Temos diversas formas de você ajudar nossos amiguinhos. Venha fazer
+					parte do nosso time!
+				</p>
+				<a href="#" class="btn btn-primary btn-sm">Saber mais</a>
+			</div>
+			<div class="option">
+				<h3 class="h5">Doe</h3>
+				<p>
+					Sua contribuição é fundamental para mantermos nosso trabalho. Qualquer
+					valor faz a diferença!
+				</p>
+				<a href="#" class="btn btn-primary btn-sm">Saber mais</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="chat-message">
+		<h2 class="h4 mb-3">Animais para Adoção</h2>
+		<div id="animal-grid" class="row">
+			<!-- O conteúdo será carregado via AJAX -->
+		</div>
+		<div class="text-center mt-4">
+			<div id="loading" class="d-none">
+				<div class="spinner-border text-primary" role="status">
+					<span class="visually-hidden">Carregando...</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="chat-message">
+		<h2 class="h4 mb-3">IMPORTANTE!</h2>
+		<p>
+			Lembre-se que adotar um animal é uma responsabilidade para toda a vida.
+			Antes de adotar, considere:
+		</p>
+		<ul class="list-unstyled">
+			<li>✓ Tempo disponível para cuidar do animal</li>
+			<li>✓ Espaço adequado em casa</li>
+			<li>✓ Condições financeiras para alimentação e cuidados veterinários</li>
+			<li>✓ Acordo e apoio de todos que moram com você</li>
+		</ul>
+	</div>
+</div>
+{% endblock content %}
+{% block extra_js %}
+<script>
+	let page = 1;
+	let loading = false;
+	let hasMore = true;
+
+	function loadAnimals() {
+		if (loading || !hasMore) return;
+
+		loading = true;
+		document.getElementById("loading").classList.remove("d-none");
+
+		fetch(`/api/animals/?page=${page}`)
+			.then((response) => response.json())
+			.then((data) => {
+				const grid = document.getElementById("animal-grid");
+
+				data.animals.forEach((animal) => {
+					const card = document.createElement("div");
+					card.className = "col-md-6 mb-4";
+					card.innerHTML = `
+                    <div class="animal-card">
+                        <img src="${animal.foto_url || "/static/images/no-image.jpg"}" class="card-img-top" alt="${animal.nome}">
+                        <div class="animal-info">
+                            <h3 class="animal-name">${animal.nome}</h3>
+                            <div class="animal-meta">
+                                <span>${animal.especie}</span> • 
+                                <span>${animal.idadeEstimada} meses</span>
+                            </div>
+                            <a href="/animal/${animal.id}" class="btn btn-primary w-100">Conhecer</a>
+                        </div>
+                    </div>
+                `;
+					grid.appendChild(card);
+				});
+
+				hasMore = data.has_next;
+				if (hasMore) page++;
+
+				loading = false;
+				document.getElementById("loading").classList.add("d-none");
+			})
+			.catch((error) => {
+				console.error("Erro ao carregar animais:", error);
+				loading = false;
+				document.getElementById("loading").classList.add("d-none");
+			});
+	}
+
+	// Infinite scroll
+	window.addEventListener("scroll", () => {
+		if (
+			window.innerHeight + window.scrollY >=
+			document.documentElement.scrollHeight - 100
+		) {
+			loadAnimals();
+		}
+	});
+
+	// Carrega os primeiros animais
+	document.addEventListener("DOMContentLoaded", loadAnimals);
+</script>
+{% endblock extra_js %}

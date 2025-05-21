@@ -1,0 +1,174 @@
+{% extends 'core/base.html' %}
+{% block title %}Adotar{% endblock %}
+{% block content %}
+<div class="container">
+	<div class="chat-container">
+		<div class="chat-message">
+			<h1 class="h3 mb-4">Animais para Adoção</h1>
+
+			<!-- Filtros -->
+			<div class="filters mb-4">
+				<form class="row g-3" id="filter-form">
+					<div class="col-md-3">
+						<label for="especie" class="form-label">Espécie</label>
+						<select class="form-select" id="especie" name="especie">
+							<option value="">Todas</option>
+							<option value="cachorro">Cachorro</option>
+							<option value="gato">Gato</option>
+						</select>
+					</div>
+					<div class="col-md-3">
+						<label for="idade" class="form-label">Idade</label>
+						<select class="form-select" id="idade" name="idade">
+							<option value="">Todas</option>
+							<option value="filhote">Filhote (até 1 ano)</option>
+							<option value="adulto">Adulto (1-7 anos)</option>
+							<option value="idoso">Idoso (7+ anos)</option>
+						</select>
+					</div>
+					<div class="col-md-3">
+						<label for="porte" class="form-label">Porte</label>
+						<select class="form-select" id="porte" name="porte">
+							<option value="">Todos</option>
+							<option value="pequeno">Pequeno</option>
+							<option value="medio">Médio</option>
+							<option value="grande">Grande</option>
+						</select>
+					</div>
+					<div class="col-md-3">
+						<label for="sexo" class="form-label">Sexo</label>
+						<select class="form-select" id="sexo" name="sexo">
+							<option value="">Todos</option>
+							<option value="M">Macho</option>
+							<option value="F">Fêmea</option>
+						</select>
+					</div>
+					<div class="col-12 text-center">
+						<button type="submit" class="btn btn-primary">Filtrar</button>
+						<button type="reset" class="btn btn-secondary">Limpar Filtros</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<!-- Grid de Animais -->
+		<div id="animal-grid" class="row">
+			<!-- O conteúdo será carregado via AJAX -->
+		</div>
+
+		<!-- Indicador de Carregamento -->
+		<div class="text-center mt-4">
+			<div id="loading" class="d-none">
+				<div class="spinner-border text-primary" role="status">
+					<span class="visually-hidden">Carregando...</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+	let page = 1;
+	let loading = false;
+	let hasMore = true;
+	let currentFilters = {};
+
+	function getFilterValues() {
+		const form = document.getElementById("filter-form");
+		const formData = new FormData(form);
+		const filters = {};
+
+		for (let [key, value] of formData.entries()) {
+			if (value) filters[key] = value;
+		}
+
+		return filters;
+	}
+
+	function loadAnimals(resetGrid = false) {
+		if (loading || (!hasMore && !resetGrid)) return;
+
+		if (resetGrid) {
+			page = 1;
+			hasMore = true;
+			document.getElementById("animal-grid").innerHTML = "";
+		}
+
+		loading = true;
+		document.getElementById("loading").classList.remove("d-none");
+
+		const queryParams = new URLSearchParams({
+			page: page,
+			...currentFilters,
+		});
+
+		fetch(`/api/animals/?${queryParams}`)
+			.then((response) => response.json())
+			.then((data) => {
+				const grid = document.getElementById("animal-grid");
+
+				if (data.animals.length === 0 && resetGrid) {
+					grid.innerHTML =
+						'<div class="col-12 text-center"><h3>Nenhum animal encontrado com os filtros selecionados.</h3></div>';
+				} else {
+					data.animals.forEach((animal) => {
+						const card = document.createElement("div");
+						card.className = "col-md-6 mb-4";
+						card.innerHTML = `
+						<div class="animal-card">
+							<img src="${animal.foto_url || "/static/images/no-image.jpg"}" class="card-img-top" alt="${animal.nome}">
+							<div class="animal-info">
+								<h3 class="animal-name">${animal.nome}</h3>
+								<div class="animal-meta">
+									<span>${animal.especie}</span> • 
+									<span>${animal.idadeEstimada} meses</span>
+								</div>
+								<a href="/animal/${animal.id}" class="btn btn-primary w-100">Conhecer</a>
+							</div>
+						</div>
+					`;
+						grid.appendChild(card);
+					});
+				}
+
+				hasMore = data.has_next;
+				if (hasMore) page++;
+
+				loading = false;
+				document.getElementById("loading").classList.add("d-none");
+			})
+			.catch((error) => {
+				console.error("Erro ao carregar animais:", error);
+				loading = false;
+				document.getElementById("loading").classList.add("d-none");
+			});
+	}
+
+	// Event Listeners
+	document.getElementById("filter-form").addEventListener("submit", (e) => {
+		e.preventDefault();
+		currentFilters = getFilterValues();
+		loadAnimals(true);
+	});
+
+	document.getElementById("filter-form").addEventListener("reset", () => {
+		setTimeout(() => {
+			currentFilters = {};
+			loadAnimals(true);
+		}, 0);
+	});
+
+	window.addEventListener("scroll", () => {
+		if (
+			window.innerHeight + window.scrollY >=
+			document.documentElement.scrollHeight - 100
+		) {
+			loadAnimals();
+		}
+	});
+
+	// Carrega os primeiros animais
+	document.addEventListener("DOMContentLoaded", loadAnimals);
+</script>
+{% endblock %}
