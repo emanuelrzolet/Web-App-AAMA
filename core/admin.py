@@ -55,6 +55,13 @@ class AnimalAdmin(admin.ModelAdmin):
             form.base_fields['tipo'].widget.attrs['readonly'] = True
         return form
 
+    def add_view(self, request, form_url='', extra_context=None):
+        # Se for uma requisição AJAX, retorne apenas o formulário
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            response = super().add_view(request, form_url, extra_context)
+            return response
+        return super().add_view(request, form_url, extra_context)
+
     def get_fieldsets(self, request, obj=None):
         # Get the tipo from either the object, POST data, or GET parameters
         tipo = None
