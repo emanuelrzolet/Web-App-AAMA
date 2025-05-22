@@ -1,160 +1,306 @@
 {% extends 'core/base.html' %}
 {% load static %}
-{% block title %}{{ animal.nome }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    .animal-profile {
+        background: #1E1E1E;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-top: 2rem;
+    }
+
+    .profile-header {
+        position: relative;
+        height: 400px;
+    }
+
+    .profile-header img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .profile-info {
+        padding: 2rem;
+        color: white;
+    }
+
+    .profile-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+    .profile-name {
+        font-size: 2rem;
+        margin: 0;
+    }
+
+    .profile-meta {
+        color: #888;
+        font-size: 1.1rem;
+    }
+
+    .tab-navigation {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .tab-button {
+        background: none;
+        border: none;
+        color: #888;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        font-size: 1.1rem;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .tab-button.active {
+        color: #FFD700;
+        border-bottom-color: #FFD700;
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .characteristics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .characteristic-item {
+        background: #333;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .characteristic-label {
+        color: #888;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .characteristic-value {
+        color: white;
+        font-size: 1.1rem;
+    }
+
+    .adoption-button {
+        background: #FFD700;
+        color: #1E1E1E;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        margin-top: 2rem;
+        width: 100%;
+    }
+
+    .adoption-button:hover {
+        background: #FFC800;
+    }
+
+    .like-button {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(0, 0, 0, 0.5);
+        border: none;
+        border-radius: 20px;
+        padding: 0.5rem 1rem;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .like-button:hover {
+        background: rgba(0, 0, 0, 0.7);
+    }
+
+    .like-button i.fas {
+        color: #ff4b4b;
+    }
+
+    .status-badge {
+        background: #4CAF50;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        margin-left: 1rem;
+    }
+
+    .status-badge.adopted {
+        background: #F44336;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container">
-	<div class="chat-container">
-		<div class="chat-message">
-			<div class="d-flex align-items-center mb-4">
-				<a
-					href="{% url 'animal_list' %}"
-					class="btn btn-link text-decoration-none"
-				>
-					<i class="fas fa-arrow-left me-2"></i>Voltar
-				</a>
-				<h1 class="h3 mb-0 ms-3">{{ animal.nome }}</h1>
-			</div>
-
-			<div class="row">
-				<div class="col-md-6">
-					<div class="animal-photos mb-4">
-						<img
-							src="{{ animal.fotos.url }}"
-							class="img-fluid rounded"
-							alt="{{ animal.nome }}"
-						/>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="animal-info">
-						<div class="info-group mb-4">
-							<h2 class="h4 mb-3">Informações Básicas</h2>
-							<div class="info-item">
-								<span class="label">Idade:</span>
-								<span class="value">{{ animal.idadeEstimada }} meses</span>
-							</div>
-							<div class="info-item">
-								<span class="label">Sexo:</span>
-								<span class="value">{{ animal.get_genero_display }}</span>
-							</div>
-							<div class="info-item">
-								<span class="label">Comportamento:</span>
-								<span class="value"
-									>{{ animal.get_comportamento_display }}</span
-								>
-							</div>
-							<div class="info-item">
-								<span class="label">Pelagem:</span>
-								<span class="value">{{ animal.get_pelagem_display }}</span>
-							</div>
-							<div class="info-item">
-								<span class="label">Cor:</span>
-								<span class="value">{{ animal.cor }}</span>
-							</div>
-							<div class="info-item">
-								<span class="label">Castrado:</span>
-								<span class="value"
-									>{% if animal.castrado %}Sim{% else %}Não{% endif %}</span
-								>
-							</div>
-						</div>
-
-						{% if animal.vacinas.all %}
-						<div class="info-group mb-4">
-							<h2 class="h4 mb-3">Carteira de Vacinação</h2>
-							<div class="vaccine-list">
-								{% for dose in animal.vacinas.all %}
-								<div class="vaccine-item">
-									<i class="fas fa-syringe me-2"></i>
-									<span>{{ dose.vacina.nome }}</span>
-									<small class="text-muted ms-2"
-										>{{ dose.data_aplicacao|date:"d/m/Y" }}</small
-									>
-								</div>
-								{% endfor %}
-							</div>
-						</div>
-						{% endif %}
-					</div>
-				</div>
-			</div>
+	<div class="animal-profile">
+		<div class="profile-header">
+			{% if animal.foto_principal %}
+				<img src="{{ animal.foto_principal.url }}" alt="{{ animal.nome }}">
+			{% else %}
+				<img src="{% static 'images/no-photo.png' %}" alt="Sem foto">
+			{% endif %}
+			
+			<button class="like-button" data-animal-id="{{ animal.id }}">
+				<i class="far fa-heart"></i>
+				<span class="like-count">{{ animal.likes_count }}</span>
+			</button>
 		</div>
 
-		<div class="chat-message">
-			<h2 class="h4 mb-3">Processo de Adoção</h2>
-			<div class="adoption-steps mb-4">
-				<div class="step">
-					<div class="step-number">1</div>
-					<div class="step-content">
-						<h3 class="h5">Requisitos Básicos</h3>
-						<ul class="list-unstyled">
-							<li><i class="fas fa-check me-2"></i>Ser maior de 18 anos</li>
-							<li><i class="fas fa-check me-2"></i>Ter um ambiente adequado</li>
-							<li><i class="fas fa-check me-2"></i>Passar por entrevista</li>
-							<li>
-								<i class="fas fa-check me-2"></i>Assinar termo de
-								responsabilidade
-							</li>
-						</ul>
-					</div>
+		<div class="profile-info">
+			<div class="profile-title">
+				<div>
+					<h1 class="profile-name">
+						{{ animal.nome }}
+						<span class="status-badge {% if animal.status == 'ADOTADO' %}adopted{% endif %}">
+							{{ animal.get_status_display }}
+						</span>
+					</h1>
+					<p class="profile-meta">
+						{% if animal.idadeEstimada == 1 %}
+							1 ano
+						{% else %}
+							{{ animal.idadeEstimada }} anos
+						{% endif %}
+						sob nossos cuidados
+					</p>
 				</div>
 			</div>
 
-			<div class="text-center">
-				{% if user.is_authenticated %}
-				<button class="btn btn-primary btn-lg" id="btn-adotar">
-					<i class="fas fa-heart me-2"></i>Quero Adotar
-				</button>
-				{% else %}
-				<a href="{% url 'login' %}" class="btn btn-primary btn-lg">
-					<i class="fas fa-sign-in-alt me-2"></i>Faça login para adotar
-				</a>
-				{% endif %}
+			<div class="tab-navigation">
+				<button class="tab-button active" data-tab="sobre">Sobre</button>
+				<button class="tab-button" data-tab="caracteristicas">Características</button>
 			</div>
+
+			<div id="sobre" class="tab-content active">
+				<p>{{ animal.descricao }}</p>
+			</div>
+
+			<div id="caracteristicas" class="tab-content">
+				<div class="characteristics-grid">
+					<div class="characteristic-item">
+						<div class="characteristic-label">Pelagem</div>
+						<div class="characteristic-value">{{ animal.get_pelagem_display }}</div>
+					</div>
+					<div class="characteristic-item">
+						<div class="characteristic-label">Comportamento</div>
+						<div class="characteristic-value">{{ animal.get_comportamento_display }}</div>
+					</div>
+					<div class="characteristic-item">
+						<div class="characteristic-label">Cor</div>
+						<div class="characteristic-value">{{ animal.cor }}</div>
+					</div>
+					<div class="characteristic-item">
+						<div class="characteristic-label">Gênero</div>
+						<div class="characteristic-value">{{ animal.get_genero_display }}</div>
+					</div>
+					<div class="characteristic-item">
+						<div class="characteristic-label">Castrado</div>
+						<div class="characteristic-value">{% if animal.castrado %}Sim{% else %}Não{% endif %}</div>
+					</div>
+					{% if animal.tipo == 'CACHORRO' %}
+					<div class="characteristic-item">
+						<div class="characteristic-label">Porte</div>
+						<div class="characteristic-value">{{ animal.cachorro.get_porte_display }}</div>
+					</div>
+					<div class="characteristic-item">
+						<div class="characteristic-label">Raça</div>
+						<div class="characteristic-value">{{ animal.cachorro.raca.nome }}</div>
+					</div>
+					{% endif %}
+					{% if animal.tipo == 'GATO' %}
+					<div class="characteristic-item">
+						<div class="characteristic-label">Raça</div>
+						<div class="characteristic-value">{{ animal.gato.raca.nome }}</div>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+
+			{% if animal.status == 'DISPONIVEL' %}
+				{% if user.is_authenticated %}
+					<button id="btn-adotar" class="adoption-button">
+						<i class="fas fa-heart me-2"></i>Quero Adotar
+					</button>
+				{% else %}
+					<a href="{% url 'login' %}" class="adoption-button text-center text-decoration-none">
+						<i class="fas fa-sign-in-alt me-2"></i>Faça login para adotar
+					</a>
+				{% endif %}
+			{% endif %}
 		</div>
 	</div>
-
-	<!-- Like Button -->
-	<button class="like-button" data-animal-id="{{ animal.id }}">
-		<i class="far fa-heart"></i>
-		<span class="like-count">{{ animal.likes_count }}</span>
-	</button>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-{% if user.is_authenticated %}
-<script>
-	document.getElementById('btn-adotar').addEventListener('click', function() {
-	    if (confirm('Tem certeza que deseja iniciar o processo de adoção?')) {
-	        fetch('/api/adocao/', {
-	            method: 'POST',
-	            headers: {
-	                'Content-Type': 'application/json',
-	                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-	            },
-	            body: JSON.stringify({
-	                animal_id: {{ animal.id }}
-	            })
-	        })
-	        .then(response => response.json())
-	        .then(data => {
-	            if (data.success) {
-	                alert('Solicitação de adoção enviada com sucesso!');
-	                window.location.reload();
-	            } else {
-	                alert(data.error || 'Erro ao processar a solicitação.');
-	            }
-	        })
-	        .catch(error => {
-	            console.error('Erro:', error);
-	            alert('Erro ao processar a solicitação.');
-	        });
-	    }
-	});
-</script>
-{% endif %}
-
 <script src="{% static 'js/likes.js' %}"></script>
+<script>
+document.querySelectorAll('.tab-button').forEach(button => {
+    button.addEventListener('click', () => {
+        // Remove active class from all buttons and contents
+        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        // Add active class to clicked button and corresponding content
+        button.classList.add('active');
+        document.getElementById(button.dataset.tab).classList.add('active');
+    });
+});
+
+{% if user.is_authenticated %}
+document.getElementById('btn-adotar')?.addEventListener('click', function() {
+    if (confirm('Tem certeza que deseja iniciar o processo de adoção?')) {
+        fetch('/api/adocao/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                animal_id: {{ animal.id }}
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Solicitação de adoção enviada com sucesso!');
+                window.location.reload();
+            } else {
+                alert(data.error || 'Erro ao processar a solicitação.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao processar a solicitação.');
+        });
+    }
+});
+{% endif %}
+</script>
 {% endblock %}

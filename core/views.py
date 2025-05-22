@@ -59,9 +59,14 @@ def load_animals(request):
             {
                 'id': animal.id,
                 'nome': animal.nome,
-                'especie': 'Cachorro' if hasattr(animal, 'cachorro') else 'Gato',
+                'tipo': animal.get_tipo_display(),
                 'idade_aproximada': animal.idadeEstimada * 12 if animal.idadeEstimada else 0,
                 'foto_url': animal.foto_principal.url if animal.foto_principal else None,
+                'descricao': animal.descricao or '',
+                'genero': animal.get_genero_display(),
+                'pelagem': animal.get_pelagem_display(),
+                'porte': animal.cachorro.get_porte_display() if hasattr(animal, 'cachorro') else None,
+                'likes_count': animal.likes_count,
             }
             for animal in page.object_list
         ]

@@ -1,0 +1,71 @@
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/animal_card.css' %}">
+{% endblock %}
+
+<div class="animal-card">
+    <div class="card-image">
+        {% if animal.foto_principal %}
+            <img src="{{ animal.foto_principal.url }}" alt="{{ animal.nome }}" class="img-fluid">
+        {% else %}
+            <img src="{% static 'images/no-photo.png' %}" alt="Sem foto" class="img-fluid">
+        {% endif %}
+    </div>
+    
+    <div class="card-content">
+        <div class="card-header">
+            <h3 class="animal-name">{{ animal.nome }}</h3>
+            <span class="animal-type">{{ animal.get_tipo_display }}</span>
+        </div>
+
+        <div class="likes-section">
+            <button class="like-button" data-animal-id="{{ animal.id }}">
+                <i class="fas fa-heart"></i>
+            </button>
+            <span class="likes-count">{{ animal.likes_count }} likes</span>
+        </div>
+
+        <p class="animal-description">
+            {{ animal.descricao|default:"" }}
+        </p>
+
+        <div class="characteristics">
+            {% with idade=animal.idadeEstimada %}
+                <span class="characteristic-badge">
+                    {% if idade <= 2 %}
+                        Filhote
+                    {% elif idade <= 8 %}
+                        Adulto
+                    {% else %}
+                        Sênior
+                    {% endif %}
+                </span>
+            {% endwith %}
+
+            <span class="characteristic-badge">
+                {{ animal.get_genero_display }}
+            </span>
+
+            {% if animal.tipo == 'CACHORRO' %}
+                <span class="characteristic-badge">
+                    {{ animal.cachorro.get_porte_display }}
+                </span>
+            {% endif %}
+
+            <span class="characteristic-badge">
+                {% if animal.get_pelagem_display == 'Curta' %}
+                    Pelo curto
+                {% elif animal.get_pelagem_display == 'Média' %}
+                    Pelo médio
+                {% else %}
+                    Pelo longo
+                {% endif %}
+            </span>
+        </div>
+
+        <a href="{% url 'animal_detail' animal.id %}" class="conhecer-button">
+            Conhecer {{ animal.nome }}
+        </a>
+    </div>
+</div> 
