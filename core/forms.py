@@ -42,37 +42,23 @@ class AnimalTypeForm(forms.Form):
         widget=forms.RadioSelect
     )
 
-class CachorroForm(forms.ModelForm):
-    class Meta:
-        model = Cachorro
-        fields = ['porte', 'raca']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['raca'].queryset = RacaCachorro.objects.all().order_by('nome')
-
-class GatoForm(forms.ModelForm):
-    class Meta:
-        model = Gato
-        fields = ['raca']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['raca'].queryset = RacaGato.objects.all().order_by('nome')
-
 class AnimalForm(forms.ModelForm):
-    # Add type-specific fields
-    raca_cachorro = forms.ModelChoiceField(
-        queryset=RacaCachorro.objects.all().order_by('nome'),
+    cor = forms.CharField(
         required=False,
-        label='Raça',
-        widget=forms.Select(attrs={'class': 'form-control'})
+        widget=forms.Select(
+            choices=[('', '---------')] + Animal.COR_CHOICES,
+            attrs={'class': 'form-control'}
+        )
+    )
+    raca_cachorro = forms.ModelChoiceField(
+        queryset=RacaCachorro.objects.all(),
+        required=False,
+        empty_label=None
     )
     raca_gato = forms.ModelChoiceField(
-        queryset=RacaGato.objects.all().order_by('nome'),
+        queryset=RacaGato.objects.all(),
         required=False,
-        label='Raça',
-        widget=forms.Select(attrs={'class': 'form-control'})
+        empty_label=None
     )
     porte = forms.ChoiceField(
         choices=[
@@ -87,11 +73,10 @@ class AnimalForm(forms.ModelForm):
 
     class Meta:
         model = Animal
-        exclude = ['entrada_instituicao']
+        fields = '__all__'
         widgets = {
+            'tipo': forms.Select(attrs={'class': 'tipo-select'}),
             'dataNascimento': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-            'tipo': forms.Select(attrs={'class': 'form-control'}),
-            'cor': forms.TextInput(attrs={'class': 'form-control'}),
             'comportamento': forms.Select(attrs={'class': 'form-control'}),
             'pelagem': forms.Select(attrs={'class': 'form-control'}),
             'genero': forms.Select(attrs={'class': 'form-control'}),
@@ -100,9 +85,15 @@ class AnimalForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Initialize type-specific fields
-        self.fields['raca_cachorro'].queryset = RacaCachorro.objects.all().order_by('nome')
-        self.fields['raca_gato'].queryset = RacaGato.objects.all().order_by('nome')
+        # Set initial values for races
+        try:
+            self.fields['raca_cachorro'].initial = RacaCachorro.get_default_raca().id
+        except:
+            pass
+        try:
+            self.fields['raca_gato'].initial = RacaGato.get_default_raca().id
+        except:
+            pass
         
         if self.instance and self.instance.pk:
             self.fields['tipo'].disabled = True
@@ -127,3 +118,29 @@ class AnimalForm(forms.ModelForm):
                 self.add_error('raca_gato', 'Este campo é obrigatório para gatos.')
 
         return cleaned_data 
+
+class CachorroForm(forms.ModelForm):
+    class Meta:
+        model = Cachorro
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields['raca'].initial = RacaCachorro.get_default_raca()
+        except:
+            pass
+        self.fields['raca'].empty_label = None
+
+class GatoForm(forms.ModelForm):
+    class Meta:
+        model = Gato
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields['raca'].initial = RacaGato.get_default_raca()
+        except:
+            pass
+        self.fields['raca'].empty_label = None 

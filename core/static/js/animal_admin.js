@@ -25,6 +25,15 @@
             console.log('- HTML:', $(this).html());
         });
 
+        // Initialize color field
+        var $colorField = $('#id_cor');
+        var currentValue = $colorField.val();
+        
+        // If there's a custom color value, add it to the options
+        if (currentValue && !$colorField.find('option[value="' + currentValue + '"]').length) {
+            $colorField.append(new Option(currentValue, currentValue, true, true));
+        }
+        
         // Add explicit CSS to ensure visibility changes work
         $('head').append(`
             <style>
@@ -36,8 +45,87 @@
                     display: block !important;
                     visibility: visible !important;
                 }
+                .field-add_cor,
+                .field-add_raca_cachorro,
+                .field-add_raca_gato {
+                    padding-top: 25px !important;
+                }
             </style>
         `);
+
+        // Global function for the color dialog
+        window.showColorDialog = function() {
+            var newColor = prompt('Digite a nova cor:');
+            if (newColor) {
+                newColor = newColor.toUpperCase();
+                // Add the new color as an option if it doesn't exist
+                if (!$colorField.find('option[value="' + newColor + '"]').length) {
+                    $colorField.append(new Option(newColor, newColor));
+                }
+                $colorField.val(newColor);
+            }
+            return false;
+        };
+
+        // Global function for the breed dialog
+        window.showBreedDialog = function(tipo) {
+            var newBreed = prompt('Digite a nova raça:');
+            if (newBreed) {
+                // Create the breed via AJAX
+                $.ajax({
+                    url: '/add_raca_' + tipo + '/',
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
+                    data: {
+                        'nome': newBreed
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            var $breedField = $('#id_raca_' + tipo);
+                            // Check if option already exists
+                            if (!$breedField.find('option[value="' + response.id + '"]').length) {
+                                var option = new Option(response.nome, response.id);
+                                $breedField.append(option);
+                            }
+                            $breedField.val(response.id).trigger('change');
+                        } else {
+                            alert('Erro ao adicionar raça: ' + response.error);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        var errorMessage;
+                        try {
+                            errorMessage = JSON.parse(xhr.responseText).error;
+                        } catch (e) {
+                            errorMessage = error;
+                        }
+                        alert('Erro ao adicionar raça: ' + errorMessage);
+                    }
+                });
+            }
+            return false;
+        };
+
+        // Handle breed popup windows
+        function handlePopupResponse(win, newId, newRepr) {
+            if (newId !== null) {
+                var name = win.name;
+                if (name.startsWith('add_raca_')) {
+                    var selectField = $('#id_' + name.substring(4));
+                    var option = new Option(newRepr, newId);
+                    selectField.append(option);
+                    selectField.val(newId);
+                }
+            }
+        }
+
+        // Add the popup callback to the window
+        window.dismissAddAnotherPopup = function(win, newId, newRepr) {
+            handlePopupResponse(win, newId, newRepr);
+            win.close();
+        };
 
         function showHideFields() {
             console.log('showHideFields called');
@@ -134,10 +222,8 @@
                         }
                     });
                     
-                    // Reinitialize Django admin widgets if needed
-                    if (typeof initializeWidgets === 'function') {
-                        initializeWidgets();
-                    }
+                    // Show/hide fields after AJAX update
+                    showHideFields();
                 },
                 error: function(xhr, status, error) {
                     console.error('Error loading fields:', error);

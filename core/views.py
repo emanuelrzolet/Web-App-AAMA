@@ -5,8 +5,9 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib import messages
-from .models import Animal, Adocao
+from .models import Animal, Adocao, RacaCachorro, RacaGato
 from .forms import UserRegistrationForm
+from django.views.decorators.csrf import csrf_protect
 
 def home(request):
     return render(request, 'core/home.html')
@@ -110,3 +111,55 @@ def register(request):
 @login_required
 def profile(request):
     return render(request, 'core/profile.html')
+
+@csrf_protect
+def add_raca_cachorro(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        if nome:
+            try:
+                # Tenta encontrar uma raça existente primeiro
+                raca = RacaCachorro.objects.filter(nome__iexact=nome).first()
+                if not raca:
+                    # Se não existir, cria uma nova
+                    raca = RacaCachorro.objects.create(nome=nome)
+                return JsonResponse({
+                    'success': True,
+                    'id': raca.id,
+                    'nome': raca.nome
+                })
+            except Exception as e:
+                return JsonResponse({
+                    'success': False,
+                    'error': str(e)
+                }, status=400)
+    return JsonResponse({
+        'success': False,
+        'error': 'Requisição inválida'
+    }, status=400)
+
+@csrf_protect
+def add_raca_gato(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        if nome:
+            try:
+                # Tenta encontrar uma raça existente primeiro
+                raca = RacaGato.objects.filter(nome__iexact=nome).first()
+                if not raca:
+                    # Se não existir, cria uma nova
+                    raca = RacaGato.objects.create(nome=nome)
+                return JsonResponse({
+                    'success': True,
+                    'id': raca.id,
+                    'nome': raca.nome
+                })
+            except Exception as e:
+                return JsonResponse({
+                    'success': False,
+                    'error': str(e)
+                }, status=400)
+    return JsonResponse({
+        'success': False,
+        'error': 'Requisição inválida'
+    }, status=400)

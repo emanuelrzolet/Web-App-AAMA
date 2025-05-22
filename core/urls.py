@@ -28,4 +28,7 @@ urlpatterns = [
     path('reset/done/',
          auth_views.PasswordResetCompleteView.as_view(template_name='core/registration/password_reset_complete.html'),
          name='password_reset_complete'),
+    path('animal/list/', views.animal_list, name='animal_list'),
+    path('add_raca_cachorro/', views.add_raca_cachorro, name='add_raca_cachorro'),
+    path('add_raca_gato/', views.add_raca_gato, name='add_raca_gato'),
 ] 

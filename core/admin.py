@@ -36,12 +36,15 @@ class AnimalAdmin(admin.ModelAdmin):
     list_display = ('nome', 'tipo', 'genero', 'comportamento', 'status', 'idade_display', 'pertence_instituicao', 'preview_foto')
     list_filter = ('tipo', 'comportamento', 'status', 'pertence_instituicao')
     search_fields = ('nome',)
-    readonly_fields = ('idade_display', 'preview_foto', 'entrada_instituicao')
+    readonly_fields = ('idade_display', 'preview_foto', 'entrada_instituicao', 'add_cor', 'add_raca_cachorro', 'add_raca_gato')
     inlines = [FotoAnimalInline]
 
     class Media:
         css = {
-            'all': ('admin/css/forms.css',)
+            'all': (
+                'admin/css/forms.css',
+                'admin/css/custom.css',
+            )
         }
         js = (
             'admin/js/jquery.init.js',
@@ -55,13 +58,6 @@ class AnimalAdmin(admin.ModelAdmin):
             form.base_fields['tipo'].widget.attrs['readonly'] = True
         return form
 
-    def add_view(self, request, form_url='', extra_context=None):
-        # Se for uma requisição AJAX, retorne apenas o formulário
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            response = super().add_view(request, form_url, extra_context)
-            return response
-        return super().add_view(request, form_url, extra_context)
-
     def get_fieldsets(self, request, obj=None):
         # Get the tipo from either the object, POST data, or GET parameters
         tipo = None
@@ -72,27 +68,23 @@ class AnimalAdmin(admin.ModelAdmin):
         elif request.method == 'GET':
             tipo = request.GET.get('tipo')
 
-        print(f"Current tipo: {tipo}")  # Debug print
-
         # Base fieldsets that are always shown
         fieldsets = [
             ('Informações Básicas', {
-                'fields': ('nome', 'tipo', 'cor', 'status'),
+                'fields': (('nome', 'tipo'), ('cor', 'add_cor')),
                 'classes': ('wide',)
             }),
         ]
 
         # Add type-specific fieldsets based on the selected tipo
         if tipo == 'CACHORRO':
-            print("Adding cachorro fields")  # Debug print
             fieldsets.append(('Informações do Cachorro', {
-                'fields': ('raca_cachorro', 'porte'),
+                'fields': (('raca_cachorro', 'add_raca_cachorro'), 'porte'),
                 'classes': ('wide',)
             }))
         elif tipo == 'GATO':
-            print("Adding gato fields")  # Debug print
             fieldsets.append(('Informações do Gato', {
-                'fields': ('raca_gato',),
+                'fields': (('raca_gato', 'add_raca_gato'),),
                 'classes': ('wide',)
             }))
 
@@ -107,13 +99,17 @@ class AnimalAdmin(admin.ModelAdmin):
                 'fields': ('comportamento', 'pelagem', 'genero', 'sexo_atual', 'castrado'),
                 'classes': ('wide',)
             }),
-            ('Informações Adicionais', {
-                'fields': ('pertence_instituicao', 'saida_instituicao', 'entrada_instituicao'),
+            ('Descrição', {
+                'fields': ('descricao',),
+                'classes': ('wide',),
+                'description': 'Adicione informações sobre o animal, seu comportamento, história, etc.'
+            }),
+            ('Status', {
+                'fields': ('status', 'pertence_instituicao', 'saida_instituicao', 'entrada_instituicao'),
                 'classes': ('wide',)
             }),
         ])
 
-        print(f"Final fieldsets: {fieldsets}")  # Debug print
         return fieldsets
 
     def save_model(self, request, obj, form, change):
@@ -128,12 +124,12 @@ class AnimalAdmin(admin.ModelAdmin):
                 # Create new Cachorro instance
                 Cachorro.objects.create(
                     animal=obj,
-                    raca=raca or RacaCachorro.objects.get_or_create(nome="SRD")[0],
+                    raca=raca or RacaCachorro.get_default_raca(),
                     porte=porte or 2
                 )
             else:
                 # Update existing Cachorro instance
-                obj.cachorro.raca = raca or RacaCachorro.objects.get_or_create(nome="SRD")[0]
+                obj.cachorro.raca = raca or RacaCachorro.get_default_raca()
                 obj.cachorro.porte = porte or 2
                 obj.cachorro.save()
                 
@@ -144,11 +140,11 @@ class AnimalAdmin(admin.ModelAdmin):
                 # Create new Gato instance
                 Gato.objects.create(
                     animal=obj,
-                    raca=raca or RacaGato.objects.get_or_create(nome="SRD")[0]
+                    raca=raca or RacaGato.get_default_raca()
                 )
             else:
                 # Update existing Gato instance
-                obj.gato.raca = raca or RacaGato.objects.get_or_create(nome="SRD")[0]
+                obj.gato.raca = raca or RacaGato.get_default_raca()
                 obj.gato.save()
 
     def preview_foto(self, obj):
@@ -164,6 +160,36 @@ class AnimalAdmin(admin.ModelAdmin):
             return f"{obj.idadeEstimada} anos (estimado)"
         return "Idade não informada"
     idade_display.short_description = "Idade"
+
+    def add_cor(self, obj):
+        return format_html(
+            '''
+            <button type="button" class="button" onclick="return showColorDialog();">
+                Adicionar Nova Cor
+            </button>
+            '''
+        )
+    add_cor.short_description = ""
+
+    def add_raca_cachorro(self, obj):
+        return format_html(
+            '''
+            <button type="button" class="button" onclick="return showBreedDialog('cachorro');">
+                Adicionar Nova Raça
+            </button>
+            '''
+        )
+    add_raca_cachorro.short_description = ""
+
+    def add_raca_gato(self, obj):
+        return format_html(
+            '''
+            <button type="button" class="button" onclick="return showBreedDialog('gato');">
+                Adicionar Nova Raça
+            </button>
+            '''
+        )
+    add_raca_gato.short_description = ""
 
 @admin.register(FotoAnimal)
 class FotoAnimalAdmin(admin.ModelAdmin):

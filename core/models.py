@@ -51,6 +51,16 @@ class Animal(models.Model):
         ('4', 'Sociável'),
     ]
     
+    COR_CHOICES = [
+        ('PRETO', 'Preto'),
+        ('BRANCO', 'Branco'),
+        ('MARROM', 'Marrom'),
+        ('CINZA', 'Cinza'),
+        ('CARAMELO', 'Caramelo'),
+        ('MESCLADO', 'Mesclado'),
+        ('OUTRO', 'Outro'),
+    ]
+    
     PELAGEM_CHOICES = [
         ('1', 'Curta'),
         ('2', 'Média'),
@@ -76,7 +86,7 @@ class Animal(models.Model):
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
     dataNascimento = models.DateField(null=True, blank=True)
     idadeEstimada = models.IntegerField(null=True, blank=True, help_text="Idade em anos")
-    cor = models.CharField(max_length=50)
+    cor = models.CharField(max_length=50, null=True, blank=True)
     comportamento = models.CharField(max_length=1, choices=COMPORTAMENTO_CHOICES)
     pelagem = models.CharField(max_length=1, choices=PELAGEM_CHOICES)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DISPONIVEL')
@@ -86,6 +96,7 @@ class Animal(models.Model):
     pertence_instituicao = models.BooleanField(default=True)
     entrada_instituicao = models.DateTimeField(auto_now_add=True)
     saida_instituicao = models.DateField(null=True, blank=True)
+    descricao = models.TextField(null=True, blank=True, help_text="Descrição sobre o animal, seu comportamento, história, etc.")
 
     @property
     def foto_principal(self):
@@ -133,10 +144,20 @@ class Vacinas(models.Model):
     nome = models.CharField(max_length=255)
 
 class RacaCachorro(models.Model):
-    nome = models.CharField(max_length=50, default="SRD")
+    nome = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.nome
+
+    @classmethod
+    def get_default_raca(cls):
+        raca, created = cls.objects.get_or_create(nome="Sem raça definida")
+        return raca
+
+    class Meta:
+        verbose_name = 'Raça de Cachorro'
+        verbose_name_plural = 'Raças de Cachorro'
+        ordering = ['nome']
 
 class Cachorro(models.Model):
     porte = models.IntegerField(choices=[(1, 'Pequeno'), (2, 'Médio'), (3, 'Grande')])
@@ -148,24 +169,31 @@ class Cachorro(models.Model):
             raise ValidationError('É necessário criar um registro de Animal primeiro.')
         if self.animal.tipo != 'CACHORRO':
             raise ValidationError('O tipo do animal deve ser Cachorro.')
+        if not self.raca_id:
+            self.raca = RacaCachorro.get_default_raca()
         super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.animal.nome} - {self.raca.nome}"
 
 class RacaGato(models.Model):
-    nome = models.CharField(max_length=50, default="SRD")
+    nome = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.nome
 
     @classmethod
     def get_default_raca(cls):
-        raca, _ = cls.objects.get_or_create(nome="SRD")
-        return raca.id
+        raca, created = cls.objects.get_or_create(nome="Sem raça definida")
+        return raca
+
+    class Meta:
+        verbose_name = 'Raça de Gato'
+        verbose_name_plural = 'Raças de Gato'
+        ordering = ['nome']
 
 class Gato(models.Model):
-    raca = models.ForeignKey('RacaGato', on_delete=models.CASCADE, default=RacaGato.get_default_raca)
+    raca = models.ForeignKey('RacaGato', on_delete=models.CASCADE)
     animal = models.OneToOneField('Animal', on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
@@ -173,6 +201,8 @@ class Gato(models.Model):
             raise ValidationError('É necessário criar um registro de Animal primeiro.')
         if self.animal.tipo != 'GATO':
             raise ValidationError('O tipo do animal deve ser Gato.')
+        if not self.raca_id:
+            self.raca = RacaGato.get_default_raca()
         super().save(*args, **kwargs)
 
     def __str__(self):
