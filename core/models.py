@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from django.utils import timezone
 
 # Create your models here.
 
@@ -90,11 +91,10 @@ class Animal(models.Model):
     comportamento = models.CharField(max_length=1, choices=COMPORTAMENTO_CHOICES)
     pelagem = models.CharField(max_length=1, choices=PELAGEM_CHOICES)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DISPONIVEL')
-    sexo_atual = models.BooleanField(default=True)
     genero = models.CharField(max_length=1, choices=SEXO_CHOICES)
     castrado = models.BooleanField(default=False)
     pertence_instituicao = models.BooleanField(default=True)
-    entrada_instituicao = models.DateTimeField(auto_now_add=True)
+    entrada_instituicao = models.DateTimeField(default=timezone.now)
     saida_instituicao = models.DateField(null=True, blank=True)
     descricao = models.TextField(null=True, blank=True, help_text="Descrição sobre o animal, seu comportamento, história, etc.")
 

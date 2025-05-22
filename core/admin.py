@@ -36,7 +36,7 @@ class AnimalAdmin(admin.ModelAdmin):
     list_display = ('nome', 'tipo', 'genero', 'comportamento', 'status', 'idade_display', 'pertence_instituicao', 'preview_foto')
     list_filter = ('tipo', 'comportamento', 'status', 'pertence_instituicao')
     search_fields = ('nome',)
-    readonly_fields = ('idade_display', 'preview_foto', 'entrada_instituicao', 'add_cor', 'add_raca_cachorro', 'add_raca_gato')
+    readonly_fields = ('idade_display', 'preview_foto', 'add_cor', 'add_raca_cachorro', 'add_raca_gato')
     inlines = [FotoAnimalInline]
 
     class Media:
@@ -96,7 +96,7 @@ class AnimalAdmin(admin.ModelAdmin):
                 'description': 'Preencha a data de nascimento OU a idade estimada. O sistema calculará automaticamente o outro campo.'
             }),
             ('Características', {
-                'fields': ('comportamento', 'pelagem', 'genero', 'sexo_atual', 'castrado'),
+                'fields': ('comportamento', 'pelagem', 'genero', 'castrado'),
                 'classes': ('wide',)
             }),
             ('Descrição', {
