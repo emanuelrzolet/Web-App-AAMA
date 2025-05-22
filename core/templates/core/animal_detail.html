@@ -1,4 +1,7 @@
-{% extends 'core/base.html' %} {% block title %}{{ animal.nome }}{% endblock %}
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}{{ animal.nome }}{% endblock %}
+
 {% block content %}
 <div class="container">
 	<div class="chat-container">
@@ -111,8 +114,17 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Like Button -->
+	<button class="like-button" data-animal-id="{{ animal.id }}">
+		<i class="far fa-heart"></i>
+		<span class="like-count">{{ animal.likes_count }}</span>
+	</button>
 </div>
-{% endblock %} {% block extra_js %} {% if user.is_authenticated %}
+{% endblock %}
+
+{% block extra_js %}
+{% if user.is_authenticated %}
 <script>
 	document.getElementById('btn-adotar').addEventListener('click', function() {
 	    if (confirm('Tem certeza que deseja iniciar o processo de adoção?')) {
@@ -142,4 +154,7 @@
 	    }
 	});
 </script>
-{% endif %} {% endblock %}
+{% endif %}
+
+<script src="{% static 'js/likes.js' %}"></script>
+{% endblock %}

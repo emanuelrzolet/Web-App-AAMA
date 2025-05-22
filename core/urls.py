@@ -31,4 +31,6 @@ urlpatterns = [
     path('animal/list/', views.animal_list, name='animal_list'),
     path('add_raca_cachorro/', views.add_raca_cachorro, name='add_raca_cachorro'),
     path('add_raca_gato/', views.add_raca_gato, name='add_raca_gato'),
+    path('animal/<int:animal_id>/toggle-like/', views.toggle_like, name='toggle_like'),
+    path('animal/<int:animal_id>/is-liked/', views.is_animal_liked, name='is_animal_liked'),
 ] 

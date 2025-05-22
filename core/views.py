@@ -5,7 +5,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib import messages
-from .models import Animal, Adocao, RacaCachorro, RacaGato
+from .models import Animal, Adocao, RacaCachorro, RacaGato, Like
 from .forms import UserRegistrationForm
 from django.views.decorators.csrf import csrf_protect
 
@@ -163,3 +163,32 @@ def add_raca_gato(request):
         'success': False,
         'error': 'Requisição inválida'
     }, status=400)
+
+@login_required
+def toggle_like(request, animal_id):
+    animal = get_object_or_404(Animal, id=animal_id)
+    like, created = Like.objects.get_or_create(user=request.user, animal=animal)
+    
+    if not created:
+        # If the like already existed, remove it (unlike)
+        like.delete()
+        liked = False
+    else:
+        liked = True
+    
+    return JsonResponse({
+        'liked': liked,
+        'likes_count': animal.likes_count
+    })
+
+def is_animal_liked(request, animal_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'liked': False})
+    
+    animal = get_object_or_404(Animal, id=animal_id)
+    liked = Like.objects.filter(user=request.user, animal=animal).exists()
+    
+    return JsonResponse({
+        'liked': liked,
+        'likes_count': animal.likes_count
+    })

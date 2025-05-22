@@ -99,6 +99,10 @@ class Animal(models.Model):
     descricao = models.TextField(null=True, blank=True, help_text="Descrição sobre o animal, seu comportamento, história, etc.")
 
     @property
+    def likes_count(self):
+        return self.likes.count()
+
+    @property
     def foto_principal(self):
         foto = self.fotos_set.filter(is_principal=True).first()
         if foto:
@@ -128,6 +132,20 @@ class Animal(models.Model):
 
     def __str__(self):
         return f"{self.get_tipo_display()} - {self.nome}"
+
+class Like(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    animal = models.ForeignKey('Animal', on_delete=models.CASCADE, related_name='likes')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # Ensure each user can only like an animal once
+        unique_together = ('user', 'animal')
+        verbose_name = 'Like'
+        verbose_name_plural = 'Likes'
+
+    def __str__(self):
+        return f"{self.user.username} likes {self.animal.nome}"
 
 class Adocao(models.Model):
     animal = models.ForeignKey('Animal', on_delete=models.CASCADE)
