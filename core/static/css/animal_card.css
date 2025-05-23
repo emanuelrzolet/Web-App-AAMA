@@ -125,6 +125,16 @@
     color: #664E00;
 }
 
+.animal-card .characteristic-badge.cor {
+    background: #FFE4B5;
+    color: #664E00;
+}
+
+.animal-card .characteristic-badge.raca {
+    background: #FFE0B1;
+    color: #664E00;
+}
+
 .animal-card .conhecer-button {
     display: block;
     background: #FFD700;

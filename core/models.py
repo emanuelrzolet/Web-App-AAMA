@@ -87,7 +87,7 @@ class Animal(models.Model):
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
     dataNascimento = models.DateField(null=True, blank=True)
     idadeEstimada = models.IntegerField(null=True, blank=True, help_text="Idade em anos")
-    cor = models.CharField(max_length=50, null=True, blank=True)
+    cor = models.CharField(max_length=50, choices=COR_CHOICES, null=True, blank=True)
     comportamento = models.CharField(max_length=1, choices=COMPORTAMENTO_CHOICES)
     pelagem = models.CharField(max_length=1, choices=PELAGEM_CHOICES)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DISPONIVEL')

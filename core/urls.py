@@ -7,6 +7,7 @@ urlpatterns = [
     path('adotar/', views.animal_list, name='animal_list'),
     path('animal/<int:pk>/', views.animal_detail, name='animal_detail'),
     path('api/animals/', views.load_animals, name='load_animals'),
+    path('api/racas/', views.get_racas, name='get_racas'),
     path('api/adocao/', views.create_adocao, name='create_adocao'),
     path('register/', views.register, name='register'),
     path('profile/', views.profile, name='profile'),

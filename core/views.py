@@ -24,9 +24,12 @@ def load_animals(request):
     filters = {}
     
     # Aplicando filtros
-    especie = request.GET.get('especie')
-    if especie:
-        filters['tipo'] = especie
+    tipo = request.GET.getlist('tipo[]')
+    if tipo:
+        if len(tipo) == 1:
+            filters['tipo'] = tipo[0]
+        else:
+            filters['tipo__in'] = tipo
         
     idade = request.GET.get('idade')
     if idade:
@@ -39,12 +42,32 @@ def load_animals(request):
             filters['idadeEstimada__gt'] = 8
             
     porte = request.GET.get('porte')
-    if porte:
+    if porte and ('CACHORRO' in tipo if tipo else False):
         filters['cachorro__porte'] = porte
         
-    sexo = request.GET.get('sexo')
-    if sexo:
-        filters['genero'] = sexo
+    cor = request.GET.get('cor')
+    if cor:
+        filters['cor'] = cor
+
+    pelagem = request.GET.get('pelagem')
+    if pelagem:
+        filters['pelagem'] = pelagem
+        
+    genero = request.GET.get('genero')
+    if genero:
+        filters['genero'] = genero
+
+    castrado = request.GET.get('castrado')
+    if castrado:
+        filters['castrado'] = castrado.lower() == 'true'
+
+    raca_cachorro = request.GET.get('raca_cachorro')
+    if raca_cachorro and ('CACHORRO' in tipo if tipo else False):
+        filters['cachorro__raca_id'] = raca_cachorro
+
+    raca_gato = request.GET.get('raca_gato')
+    if raca_gato and ('GATO' in tipo if tipo else False):
+        filters['gato__raca_id'] = raca_gato
 
     # Filtrando apenas animais disponíveis para adoção
     filters['pertence_instituicao'] = True
@@ -66,6 +89,8 @@ def load_animals(request):
                 'genero': animal.get_genero_display(),
                 'pelagem': animal.get_pelagem_display(),
                 'porte': animal.cachorro.get_porte_display() if hasattr(animal, 'cachorro') else None,
+                'cor': animal.get_cor_display(),
+                'raca': animal.cachorro.raca.nome if hasattr(animal, 'cachorro') else (animal.gato.raca.nome if hasattr(animal, 'gato') else None),
                 'likes_count': animal.likes_count,
             }
             for animal in page.object_list
@@ -197,3 +222,14 @@ def is_animal_liked(request, animal_id):
         'liked': liked,
         'likes_count': animal.likes_count
     })
+
+def get_racas(request):
+    tipo = request.GET.get('tipo')
+    if tipo == 'CACHORRO':
+        racas = RacaCachorro.objects.all().values('id', 'nome')
+    elif tipo == 'GATO':
+        racas = RacaGato.objects.all().values('id', 'nome')
+    else:
+        racas = []
+    
+    return JsonResponse({'racas': list(racas)})
