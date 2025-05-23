@@ -26,21 +26,21 @@ def load_animals(request):
     # Aplicando filtros
     especie = request.GET.get('especie')
     if especie:
-        filters['especie'] = especie
+        filters['tipo'] = especie
         
     idade = request.GET.get('idade')
     if idade:
         if idade == 'filhote':
-            filters['idadeEstimada__lte'] = 12
+            filters['idadeEstimada__lte'] = 2
         elif idade == 'adulto':
-            filters['idadeEstimada__gt'] = 12
-            filters['idadeEstimada__lte'] = 84
+            filters['idadeEstimada__gt'] = 2
+            filters['idadeEstimada__lte'] = 8
         elif idade == 'idoso':
-            filters['idadeEstimada__gt'] = 84
+            filters['idadeEstimada__gt'] = 8
             
     porte = request.GET.get('porte')
-    if porte and hasattr(Animal, 'porte'):
-        filters['porte'] = porte
+    if porte:
+        filters['cachorro__porte'] = porte
         
     sexo = request.GET.get('sexo')
     if sexo:

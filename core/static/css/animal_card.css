@@ -84,16 +84,45 @@
 .animal-card .characteristics {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
     margin-bottom: 20px;
 }
 
 .animal-card .characteristic-badge {
-    background: #E6E6E6;
+    background: #fff;
     color: #333;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 1rem;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.animal-card .characteristic-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.animal-card .characteristic-badge.idade {
+    background: #FFD700;
+    color: #664E00;
+}
+
+.animal-card .characteristic-badge.genero {
+    background: #FFE0B1;
+    color: #664400;
+}
+
+.animal-card .characteristic-badge.porte {
+    background: #FFD27F;
+    color: #664000;
+}
+
+.animal-card .characteristic-badge.pelo {
+    background: #FFEFD1;
+    color: #664E00;
 }
 
 .animal-card .conhecer-button {

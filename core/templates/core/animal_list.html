@@ -138,10 +138,10 @@
 				</p>
 
 				<div class="characteristics">
-					<span class="characteristic-badge">${idadeCategoria}</span>
-					<span class="characteristic-badge">${animal.genero}</span>
-					${animal.tipo === 'CACHORRO' ? `<span class="characteristic-badge">${animal.porte}</span>` : ''}
-					<span class="characteristic-badge">Pelo ${animal.pelagem.toLowerCase()}</span>
+					<span class="characteristic-badge idade">${idadeCategoria}</span>
+					<span class="characteristic-badge genero">${animal.genero}</span>
+					${animal.tipo === 'Cachorro' && animal.porte !== null ? `<span class="characteristic-badge porte">${animal.porte}</span>` : ''}
+					<span class="characteristic-badge pelo">Pelo ${animal.pelagem.toLowerCase()}</span>
 				</div>
 
 				<a href="/animal/${animal.id}/" class="conhecer-button">

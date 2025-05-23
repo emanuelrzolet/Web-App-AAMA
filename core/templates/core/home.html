@@ -33,6 +33,36 @@
 		color: white;
 		margin-bottom: 0.5rem;
 	}
+
+	.filters {
+		display: flex;
+		gap: 1rem;
+		flex-wrap: wrap;
+		margin-bottom: 1.5rem;
+	}
+
+	.filter-btn {
+		background: #333;
+		border: none;
+		color: white;
+		padding: 8px 16px;
+		border-radius: 20px;
+		cursor: pointer;
+		transition: background 0.3s ease;
+	}
+
+	.filter-btn.active {
+		background: #FFD700;
+		color: #1E1E1E;
+	}
+
+	.filter-btn:hover {
+		background: #444;
+	}
+
+	.filter-btn.active:hover {
+		background: #FFC800;
+	}
 </style>
 {% endblock %}
 
@@ -83,6 +113,12 @@
 
 	<div class="chat-message">
 		<h2 class="h4 mb-3">Animais para Adoção</h2>
+		<div class="filters">
+			<button class="filter-btn active" data-filter="porte" data-value="">Todos os Portes</button>
+			<button class="filter-btn" data-filter="porte" data-value="1">Pequeno</button>
+			<button class="filter-btn" data-filter="porte" data-value="2">Médio</button>
+			<button class="filter-btn" data-filter="porte" data-value="3">Grande</button>
+		</div>
 		<div id="animal-grid">
 			<!-- Cards serão carregados aqui via JavaScript -->
 		</div>
@@ -117,6 +153,9 @@
 	let page = 1;
 	let loading = false;
 	let hasMore = true;
+	const filters = {
+		porte: ''
+	};
 
 	function getIdadeCategoria(idade) {
 		if (idade <= 2) return 'Filhote';
@@ -153,10 +192,10 @@
 				</p>
 
 				<div class="characteristics">
-					<span class="characteristic-badge">${idadeCategoria}</span>
-					<span class="characteristic-badge">${animal.genero}</span>
-					${animal.tipo === 'CACHORRO' ? `<span class="characteristic-badge">${animal.porte}</span>` : ''}
-					<span class="characteristic-badge">Pelo ${animal.pelagem.toLowerCase()}</span>
+					<span class="characteristic-badge idade">${idadeCategoria}</span>
+					<span class="characteristic-badge genero">${animal.genero}</span>
+					${animal.tipo === 'Cachorro' && animal.porte ? `<span class="characteristic-badge porte">${animal.porte}</span>` : ''}
+					<span class="characteristic-badge pelo">Pelo ${animal.pelagem.toLowerCase()}</span>
 				</div>
 
 				<a href="/animal/${animal.id}/" class="conhecer-button">
@@ -166,16 +205,25 @@
 		</div>`;
 	}
 
-	function loadAnimals() {
+	function loadAnimals(resetGrid = false) {
 		if (loading || !hasMore) return;
 
 		loading = true;
 		document.getElementById("loading").classList.remove("d-none");
 
-		fetch(`/api/animals/?page=${page}`)
+		const params = new URLSearchParams({
+			page: page,
+			...filters
+		});
+
+		fetch(`/api/animals/?${params}`)
 			.then((response) => response.json())
 			.then((data) => {
 				const grid = document.getElementById("animal-grid");
+				
+				if (resetGrid) {
+					grid.innerHTML = '';
+				}
 
 				data.animals.forEach((animal) => {
 					const cardHtml = createAnimalCard(animal);
@@ -197,6 +245,25 @@
 				document.getElementById("loading").classList.add("d-none");
 			});
 	}
+
+	// Filter handling
+	document.querySelectorAll('.filter-btn').forEach(button => {
+		button.addEventListener('click', function() {
+			const filterType = this.dataset.filter;
+			const value = this.dataset.value;
+			
+			// Toggle active state within filter group
+			this.parentElement.querySelectorAll('.filter-btn').forEach(btn => {
+				btn.classList.remove('active');
+			});
+			this.classList.add('active');
+			
+			filters[filterType] = value;
+			page = 1;
+			hasMore = true;
+			loadAnimals(true);
+		});
+	});
 
 	// Infinite scroll
 	window.addEventListener("scroll", () => {
