@@ -1,4 +1,41 @@
 {% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/animal_card.css' %}">
+<style>
+	#animal-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		gap: 2rem;
+		padding: 2rem;
+	}
+
+	#loading {
+		text-align: center;
+		padding: 2rem;
+	}
+
+	.chat-message {
+		background: #1E1E1E;
+		padding: 2rem;
+		border-radius: 12px;
+		margin-bottom: 2rem;
+	}
+
+	.chat-message h2 {
+		color: #FFD700;
+		margin-bottom: 1rem;
+	}
+
+	.chat-message ul li {
+		color: white;
+		margin-bottom: 0.5rem;
+	}
+</style>
+{% endblock %}
+
 {% block title %}Início{% endblock title %}
 {% block content %}
 <div class="chat-container">
@@ -46,8 +83,8 @@
 
 	<div class="chat-message">
 		<h2 class="h4 mb-3">Animais para Adoção</h2>
-		<div id="animal-grid" class="row">
-			<!-- O conteúdo será carregado via AJAX -->
+		<div id="animal-grid">
+			<!-- Cards serão carregados aqui via JavaScript -->
 		</div>
 		<div class="text-center mt-4">
 			<div id="loading" class="d-none">
@@ -73,11 +110,61 @@
 	</div>
 </div>
 {% endblock content %}
+
 {% block extra_js %}
+<script src="{% static 'js/likes.js' %}"></script>
 <script>
 	let page = 1;
 	let loading = false;
 	let hasMore = true;
+
+	function getIdadeCategoria(idade) {
+		if (idade <= 2) return 'Filhote';
+		if (idade <= 8) return 'Adulto';
+		return 'Sênior';
+	}
+
+	function createAnimalCard(animal) {
+		const idadeCategoria = getIdadeCategoria(Math.floor(animal.idade_aproximada/12));
+		
+		return `
+		<div class="animal-card">
+			<div class="card-image">
+				${animal.foto_url 
+					? `<img src="${animal.foto_url}" alt="${animal.nome}" class="img-fluid">`
+					: `<img src="{% static 'images/no-photo.png' %}" alt="Sem foto" class="img-fluid">`
+				}
+			</div>
+			<div class="card-content">
+				<div class="card-header">
+					<h3 class="animal-name">${animal.nome}</h3>
+					<span class="animal-type">${animal.tipo}</span>
+				</div>
+
+				<div class="likes-section">
+					<button class="like-button" data-animal-id="${animal.id}">
+						<i class="far fa-heart"></i>
+					</button>
+					<span class="likes-count">${animal.likes_count || 0} likes</span>
+				</div>
+
+				<p class="animal-description">
+					${animal.descricao || ''}
+				</p>
+
+				<div class="characteristics">
+					<span class="characteristic-badge">${idadeCategoria}</span>
+					<span class="characteristic-badge">${animal.genero}</span>
+					${animal.tipo === 'CACHORRO' ? `<span class="characteristic-badge">${animal.porte}</span>` : ''}
+					<span class="characteristic-badge">Pelo ${animal.pelagem.toLowerCase()}</span>
+				</div>
+
+				<a href="/animal/${animal.id}/" class="conhecer-button">
+					Conhecer ${animal.nome}
+				</a>
+			</div>
+		</div>`;
+	}
 
 	function loadAnimals() {
 		if (loading || !hasMore) return;
@@ -91,22 +178,8 @@
 				const grid = document.getElementById("animal-grid");
 
 				data.animals.forEach((animal) => {
-					const card = document.createElement("div");
-					card.className = "col-md-6 mb-4";
-					card.innerHTML = `
-                    <div class="animal-card">
-                        <img src="${animal.foto_url || "/static/images/no-image.jpg"}" class="card-img-top" alt="${animal.nome}">
-                        <div class="animal-info">
-                            <h3 class="animal-name">${animal.nome}</h3>
-                            <div class="animal-meta">
-                                <span>${animal.especie}</span> • 
-                                <span>${animal.idadeEstimada} meses</span>
-                            </div>
-                            <a href="/animal/${animal.id}" class="btn btn-primary w-100">Conhecer</a>
-                        </div>
-                    </div>
-                `;
-					grid.appendChild(card);
+					const cardHtml = createAnimalCard(animal);
+					grid.insertAdjacentHTML('beforeend', cardHtml);
 				});
 
 				hasMore = data.has_next;
@@ -114,6 +187,9 @@
 
 				loading = false;
 				document.getElementById("loading").classList.add("d-none");
+
+				// Initialize like buttons for new cards
+				initializeLikeButtons();
 			})
 			.catch((error) => {
 				console.error("Erro ao carregar animais:", error);
