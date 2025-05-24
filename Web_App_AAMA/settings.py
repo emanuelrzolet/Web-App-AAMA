@@ -50,7 +50,7 @@ if not DEBUG:  # Em produção
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
     EMAIL_HOST_USER = 'seu-email@dominio.com'
-    EMAIL_HOST_PASSWORD = 'sua-senha-de-app'
+    EMAIL_HOST_PASSWORD = 'sua-senha-smtp'
     DEFAULT_FROM_EMAIL = 'AAMA <noreply@seu-dominio.com>'
 else:  # Em desenvolvimento
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
