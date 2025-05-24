@@ -766,6 +766,9 @@
 	});
 
 	// Carrega os primeiros animais
-	document.addEventListener("DOMContentLoaded", loadAnimals);
+	document.addEventListener("DOMContentLoaded", () => {
+		loadAnimals();
+		initializeLikeButtons();
+	});
 </script>
 {% endblock extra_js %}
