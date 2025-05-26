@@ -24,7 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),  # Authentication URLs
     path('', include('core.urls')),
-    path('google/login/', oauth2_login, name='google_login'),
+    # path('google/login/', oauth2_login, name='google_login'), TESTE PARA REMOVER LINHA DESNECESSÁRIA
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
