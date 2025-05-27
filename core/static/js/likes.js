@@ -1,26 +1,19 @@
 function initializeLikeButtons() {
     document.querySelectorAll('.like-button').forEach(button => {
         const animalId = button.dataset.animalId;
-        
-        // Verifica se o usuário já deu like
-        fetch(`/animal/${animalId}/is-liked/`)
+
+        // 1. Verifica se o usuário já deu like (Requisição GET)
+        fetch(`/animal/${animalId}/is-liked/`) // <-- Esta é a requisição GET
             .then(response => response.json())
             .then(data => {
-                const icon = button.querySelector('i');
-                if (data.liked) {
-                    icon.classList.remove('far');
-                    icon.classList.add('fas');
-                } else {
-                    icon.classList.remove('fas');
-                    icon.classList.add('far');
-                }
+                // ... Atualiza o ícone e a contagem de likes ...
                 button.nextElementSibling.textContent = `${data.likes_count} likes`;
             })
             .catch(error => console.error('Erro ao verificar like:', error));
 
-        // Adiciona o evento de click
+        // 2. Adiciona o evento de click (Requisição POST)
         button.addEventListener('click', function() {
-            fetch(`/animal/${animalId}/toggle-like/`, {
+            fetch(`/animal/${animalId}/toggle-like/`, { // <-- Esta é a requisição POST
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': getCookie('csrftoken')
@@ -29,44 +22,15 @@ function initializeLikeButtons() {
             .then(response => {
                 if (response.status === 403) {
                     // Usuário não está logado
-                    window.location.href = '/login/';
+                    window.location.href = '/login/'; // <-- ESTE É O REDIRECIONAMENTO PARA LOGIN!
                     return;
                 }
                 return response.json();
             })
             .then(data => {
-                if (data) {
-                    const icon = button.querySelector('i');
-                    if (data.liked) {
-                        icon.classList.remove('far');
-                        icon.classList.add('fas');
-                    } else {
-                        icon.classList.remove('fas');
-                        icon.classList.add('far');
-                    }
-                    button.nextElementSibling.textContent = `${data.likes_count} likes`;
-                }
+                // ... Atualiza o ícone e a contagem de likes após o toggle ...
             })
             .catch(error => console.error('Erro ao dar like:', error));
         });
     });
 }
-
-// Função para obter o cookie do CSRF token
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
-// Inicializa os botões de like quando o documento carrega
-document.addEventListener('DOMContentLoaded', initializeLikeButtons); 

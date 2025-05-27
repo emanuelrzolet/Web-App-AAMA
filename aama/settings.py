@@ -130,6 +130,13 @@ SOCIALACCOUNT_PROVIDERS = {
             'client_id': os.getenv('FACEBOOK_CLIENT_ID'),
             'secret': os.getenv('FACEBOOK_CLIENT_SECRET'),
             'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
         }
     }
 }
