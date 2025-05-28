@@ -9,5 +9,14 @@ class Adocao(models.Model):
     data_confirmacao = models.DateTimeField(null=True, blank=True)
     confirmado = models.BooleanField(default=False)
 
+    def save(self, *args, **kwargs):
+        confirmado_antes = None
+        if self.pk:
+            confirmado_antes = type(self).objects.get(pk=self.pk).confirmado
+        super().save(*args, **kwargs)
+        if self.confirmado and (not confirmado_antes):
+            self.animal.status = 'ADOTADO'
+            self.animal.save()
+
     def __str__(self):
         return f"{self.usuario} -> {self.animal} ({'Confirmada' if self.confirmado else 'Pendente'})"
