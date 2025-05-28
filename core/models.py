@@ -178,19 +178,6 @@ class Like(models.Model):
     def __str__(self):
         return f"{self.user.username} likes {self.animal.nome}"
 
-class Adocao(models.Model):
-    animal = models.ForeignKey('Animal', on_delete=models.CASCADE)
-    adotante = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # Referencia o modelo de usuário
-    data_requisicao = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        verbose_name = 'Solicitação de Adoção'
-        verbose_name_plural = 'Solicitações de Adoção'
-        ordering = ['-data_requisicao']
-
-    def __str__(self):
-        return f"Adoção de {self.animal.nome} por {self.adotante.username}"
-
 class Dose(models.Model):
     nome = models.CharField(max_length=255)
     data_aplicacao = models.DateField(auto_now_add=True)

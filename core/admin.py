@@ -7,8 +7,7 @@ from django.http import HttpResponseRedirect
 from .forms import AnimalTypeForm, AnimalForm, CachorroForm, GatoForm
 from .models import (
     User, Animal, Cachorro, Gato, 
-    RacaCachorro, RacaGato, Adocao, 
-    Dose, Vacinas, Endereco, FotoAnimal
+    RacaCachorro, RacaGato, Dose, Vacinas, Endereco, FotoAnimal
 )
 
 class FotoAnimalInline(admin.TabularInline):
@@ -80,12 +79,12 @@ class AnimalAdmin(admin.ModelAdmin):
         if tipo == 'CACHORRO':
             fieldsets.append(('Informações do Cachorro', {
                 'fields': (('raca_cachorro', 'add_raca_cachorro'), 'porte'),
-                'classes': ('wide',)
+                'classes': ('wide','fieldset-tipo-dinamico')
             }))
         elif tipo == 'GATO':
             fieldsets.append(('Informações do Gato', {
                 'fields': (('raca_gato', 'add_raca_gato'),),
-                'classes': ('wide',)
+                'classes': ('wide','fieldset-tipo-dinamico')
             }))
 
         # Add remaining common fieldsets
@@ -224,12 +223,6 @@ class GatoAdmin(admin.ModelAdmin):
     list_display = ('animal', 'raca')
     list_filter = ('raca',)
     search_fields = ('animal__nome', 'raca__nome')
-
-@admin.register(Adocao)
-class AdocaoAdmin(admin.ModelAdmin):
-    list_display = ('animal', 'adotante', 'data_requisicao')
-    list_filter = ('data_requisicao',)
-    search_fields = ('animal__nome', 'adotante__username')
 
 @admin.register(Dose)
 class DoseAdmin(admin.ModelAdmin):

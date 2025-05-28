@@ -5,7 +5,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib import messages
-from .models import Animal, Adocao, RacaCachorro, RacaGato, Like
+from .models import Animal, RacaCachorro, RacaGato, Like
 from .forms import UserRegistrationForm
 from django.views.decorators.csrf import csrf_protect
 
