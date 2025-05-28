@@ -361,13 +361,8 @@
 
 		<div class="filter-group">
 			<h4 class="filter-group-title">Cor</h4>
-			<div class="filter-options" data-filter="cor">
-				<button class="filter-option" data-value="PRETO">Preto</button>
-				<button class="filter-option" data-value="BRANCO">Branco</button>
-				<button class="filter-option" data-value="MARROM">Marrom</button>
-				<button class="filter-option" data-value="CINZA">Cinza</button>
-				<button class="filter-option" data-value="CARAMELO">Caramelo</button>
-				<button class="filter-option" data-value="MESCLADO">Mesclado</button>
+			<div class="filter-options" data-filter="cor" id="corOptions">
+				<!-- Opções de cor serão carregadas dinamicamente -->
 			</div>
 		</div>
 
@@ -404,7 +399,6 @@
 	const filters = {};
 	const selectedTypes = new Set();
 
-	// Modal handling
 	const modal = document.getElementById('filterModal');
 	const openFilterBtn = document.getElementById('openFilters');
 	const closeModalBtn = document.querySelector('.close-modal');
@@ -416,6 +410,38 @@
 	const porteGroup = document.getElementById('porteGroup');
 	const racaCachorroOptions = document.getElementById('racaCachorroOptions');
 	const racaGatoOptions = document.getElementById('racaGatoOptions');
+
+	function loadCores() {
+		fetch('/get_cores/')
+			.then(response => response.json())
+			.then(data => {
+				console.log('Cores recebidas do backend:', data);
+				const corOptions = document.getElementById('corOptions');
+				corOptions.innerHTML = '';
+				filterLabels.cor.values = {};
+				data.cores.forEach(cor => {
+					const button = document.createElement('button');
+					button.className = 'filter-option';
+					button.dataset.value = cor.value;
+					button.textContent = cor.label;
+					corOptions.appendChild(button);
+					filterLabels.cor.values[cor.value] = cor.label;
+				});
+				// Adiciona event listeners para as novas opções
+				corOptions.querySelectorAll('.filter-option').forEach(option => {
+					option.addEventListener('click', handleFilterOptionClick);
+				});
+			})
+			.catch(error => {
+				console.error('Erro ao carregar cores:', error);
+			});
+	}
+
+	openFilterBtn.addEventListener('click', () => {
+		loadCores();
+		modal.classList.add('show');
+	});
+
 
 	const filterLabels = {
 		tipo: {
@@ -459,14 +485,7 @@
 		},
 		cor: {
 			name: 'Cor',
-			values: {
-				'PRETO': 'Preto',
-				'BRANCO': 'Branco',
-				'MARROM': 'Marrom',
-				'CINZA': 'Cinza',
-				'CARAMELO': 'Caramelo',
-				'MESCLADO': 'Mesclado'
-			}
+			values: {} // Será preenchido dinamicamente
 		},
 		genero: {
 			name: 'Gênero',

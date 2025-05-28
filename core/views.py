@@ -168,6 +168,18 @@ def add_raca_cachorro(request):
         'error': 'Requisição inválida'
     }, status=400)
 
+def get_cores(request):
+    # Retorna apenas cores que estão associadas a pelo menos um animal disponível
+    cores = Animal.objects.filter(status='DISPONIVEL').values_list('cor', flat=True).distinct()
+    # Remove valores vazios e normaliza para maiúsculas
+    cores = [c.upper() for c in cores if c]
+    # Filtra apenas cores válidas
+    cor_validas = set([c[0] for c in Animal.COR_CHOICES])
+    cores = [c for c in cores if c in cor_validas]
+    choices_dict = dict(Animal.COR_CHOICES)
+    cores_list = [{'value': c, 'label': choices_dict.get(c, c)} for c in cores]
+    return JsonResponse({'cores': cores_list})
+
 @csrf_protect
 def add_raca_gato(request):
     if request.method == 'POST':
@@ -223,12 +235,30 @@ def is_animal_liked(request, animal_id):
         'likes_count': animal.likes_count
     })
 
+from django.db.models import Exists, OuterRef
+
 def get_racas(request):
     tipo = request.GET.get('tipo')
     if tipo == 'CACHORRO':
-        racas = RacaCachorro.objects.all().values('id', 'nome')
+        racas = RacaCachorro.objects.annotate(
+            tem_disponivel=Exists(
+                Animal.objects.filter(
+                    tipo='CACHORRO',
+                    status='DISPONIVEL',
+                    cachorro__raca=OuterRef('pk')
+                )
+            )
+        ).filter(tem_disponivel=True).values('id', 'nome')
     elif tipo == 'GATO':
-        racas = RacaGato.objects.all().values('id', 'nome')
+        racas = RacaGato.objects.annotate(
+            tem_disponivel=Exists(
+                Animal.objects.filter(
+                    tipo='GATO',
+                    status='DISPONIVEL',
+                    gato__raca=OuterRef('pk')
+                )
+            )
+        ).filter(tem_disponivel=True).values('id', 'nome')
     else:
         racas = []
     

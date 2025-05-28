@@ -3,6 +3,7 @@ from django.contrib.auth import views as auth_vi8ews
 from . import views
 
 urlpatterns = [
+    path('get_cores/', views.get_cores, name='get_cores'),
     path('', views.home, name='home'),
     path('adotar/', views.animal_list, name='animal_list'),
     path('animal/<int:pk>/', views.animal_detail, name='animal_detail'),
