@@ -160,16 +160,38 @@
 <div class="container">
 	<div class="animal-profile">
 		<div class="profile-header">
-			{% if animal.foto_principal %}
-				<img src="{{ animal.foto_principal.url }}" alt="{{ animal.nome }}">
-			{% else %}
-				<img src="{% static 'images/no-photo.png' %}" alt="Sem foto">
-			{% endif %}
-			
-			<button class="like-button" data-animal-id="{{ animal.id }}">
-				<i class="far fa-heart"></i>
-				<span class="like-count">{{ animal.likes_count }}</span>
-			</button>
+			<div id="animal-carousel">
+	{% get_static_prefix as static_prefix %}
+<img id="main-animal-photo" src="{% if foto_principal %}{{ foto_principal }}{% else %}{{ static_prefix }}images/no-photo.png{% endif %}" alt="{{ animal.nome }}" style="width:100%; max-height:400px; object-fit:cover; border-radius:12px; border:2px solid #333;">
+
+	{% if outras_fotos %}
+	<div class="animal-gallery" style="margin-top: 1rem; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+		<img class="carousel-thumb" src="{% if foto_principal %}{{ foto_principal }}{% else %}{{ static_prefix }}images/no-photo.png{% endif %}" alt="Principal" style="max-width: 80px; max-height: 80px; border-radius: 8px; object-fit: cover; border: 2px solid #FFD700; cursor:pointer;">
+		{% for foto in outras_fotos %}
+			<img class="carousel-thumb" src="{{ foto.foto.url }}" alt="Foto extra de {{ animal.nome }}" style="max-width: 80px; max-height: 80px; border-radius: 8px; object-fit: cover; border: 2px solid #333; cursor:pointer;">
+		{% endfor %}
+	</div>
+	{% endif %}
+</div>
+
+<button class="like-button" data-animal-id="{{ animal.id }}">
+	<i class="far fa-heart"></i>
+	<span class="like-count">{{ animal.likes_count }}</span>
+</button>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+	const mainPhoto = document.getElementById('main-animal-photo');
+	const thumbs = document.querySelectorAll('.carousel-thumb');
+	thumbs.forEach(thumb => {
+		thumb.addEventListener('click', function() {
+			thumbs.forEach(t => t.style.borderColor = '#333');
+			this.style.borderColor = '#FFD700';
+			mainPhoto.src = this.src;
+		});
+	});
+});
+</script>
 		</div>
 
 		<div class="profile-info">

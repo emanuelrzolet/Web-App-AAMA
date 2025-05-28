@@ -17,7 +17,14 @@ def animal_list(request):
 
 def animal_detail(request, pk):
     animal = get_object_or_404(Animal, pk=pk)
-    return render(request, 'core/animal_detail.html', {'animal': animal})
+    fotos = animal.fotos_set.all()
+    foto_principal = animal.foto_principal.url if getattr(animal, 'foto_principal', None) else None
+    outras_fotos = [f for f in fotos if not f.is_principal]
+    return render(request, 'core/animal_detail.html', {
+        'animal': animal,
+        'outras_fotos': outras_fotos,
+        'foto_principal': foto_principal,
+    })
 
 def load_animals(request):
     page_number = request.GET.get('page', 1)
