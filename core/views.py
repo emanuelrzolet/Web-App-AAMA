@@ -70,7 +70,7 @@ def load_animals(request):
         filters['gato__raca_id'] = raca_gato
 
     # Filtrando apenas animais disponíveis para adoção
-    filters['pertence_instituicao'] = True
+    filters['status'] = 'DISPONIVEL'
     
     animals = Animal.objects.filter(**filters).order_by('-entrada_instituicao')
     paginator = Paginator(animals, 9)  # 9 animais por página

@@ -46,6 +46,10 @@ class FotoAnimal(models.Model):
             self.is_principal = True
         super().save(*args, **kwargs)
 
+class DisponiveisManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status='DISPONIVEL')
+
 class Animal(models.Model):
     COMPORTAMENTO_CHOICES = [
         ('1', 'Dócil'),
@@ -109,6 +113,10 @@ class Animal(models.Model):
         related_name='animais_cadastrados', # Nome reverso para acessar animais de um usuário
         help_text="Usuário responsável pelo cadastro deste animal."
     )
+
+    # Manager customizado: Animal.disponiveis.all() retorna apenas disponíveis
+    objects = models.Manager()  # Manager padrão
+    disponiveis = DisponiveisManager()  # Manager para disponíveis
 
     @property
     def likes_count(self):
