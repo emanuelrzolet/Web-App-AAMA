@@ -6,6 +6,7 @@ from django.utils import timezone
 @admin.register(Adocao)
 class AdocaoAdmin(admin.ModelAdmin):
     list_display = ('animal', 'usuario', 'confirmado', 'data_pedido', 'data_confirmacao')
+    list_filter = ('confirmado',)
     actions = ['confirmar_adocao']
 
     def confirmar_adocao(self, request, queryset):
