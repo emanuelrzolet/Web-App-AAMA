@@ -208,7 +208,7 @@ class RacaCachorro(models.Model):
 
     @classmethod
     def get_default_raca(cls):
-        raca, created = cls.objects.get_or_create(nome="SRD") # Alterado para "SRD" para consistência com o sinal
+        raca, created = cls.objects.get_or_create(nome="Sem raça definida") # Alterado para "Sem raça definida" para consistência com o sinal
         return raca
 
     class Meta:
@@ -240,7 +240,7 @@ class RacaGato(models.Model):
 
     @classmethod
     def get_default_raca(cls):
-        raca, created = cls.objects.get_or_create(nome="SRD") # Alterado para "SRD" para consistência com o sinal
+        raca, created = cls.objects.get_or_create(nome="Sem raça definida") # Alterado para "Sem raça definida" para consistência com o sinal
         return raca
 
     class Meta:
@@ -267,9 +267,9 @@ class Gato(models.Model):
 def create_animal_type(sender, instance, created, **kwargs):
     if created:
         if instance.tipo == 'CACHORRO':
-            raca_default = RacaCachorro.objects.get_or_create(nome="SRD")[0]
+            raca_default = RacaCachorro.objects.get_or_create(nome="Sem raça definida")[0]
             # O porte default 2 (Médio) foi mantido.
             Cachorro.objects.create(animal=instance, raca=raca_default, porte=2)
         elif instance.tipo == 'GATO':
-            raca_default = RacaGato.objects.get_or_create(nome="SRD")[0]
+            raca_default = RacaGato.objects.get_or_create(nome="Sem raça definida")[0]
             Gato.objects.create(animal=instance, raca=raca_default)
