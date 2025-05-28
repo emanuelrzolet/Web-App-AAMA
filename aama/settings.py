@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',  # Required for allauth
     'core',
-    'adocao', #TEM QUE SER IMPLEMENTADO um novo app para adoção, por enquanto só tem o core
     
     # Third party apps
     'allauth',
