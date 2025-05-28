@@ -1,3 +1,4 @@
+# core/models.py
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
@@ -6,6 +7,7 @@ from django.dispatch import receiver
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
+from django.conf import settings # Importar settings para referenciar AUTH_USER_MODEL
 
 # Create your models here.
 
@@ -98,6 +100,16 @@ class Animal(models.Model):
     saida_instituicao = models.DateField(null=True, blank=True)
     descricao = models.TextField(null=True, blank=True, help_text="Descrição sobre o animal, seu comportamento, história, etc.")
 
+    # Campo para ligar o animal ao usuário que o cadastrou/é responsável
+    cadastrado_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL, # Referencia o modelo de usuário definido em settings.py
+        on_delete=models.SET_NULL, # Define o campo como NULL se o usuário for deletado
+        null=True, # Permite que o campo seja NULL no banco de dados
+        blank=True, # Permite que o campo seja opcional no formulário
+        related_name='animais_cadastrados', # Nome reverso para acessar animais de um usuário
+        help_text="Usuário responsável pelo cadastro deste animal."
+    )
+
     @property
     def likes_count(self):
         return self.likes.count()
@@ -109,6 +121,13 @@ class Animal(models.Model):
             return foto.foto
         return None
 
+    @property
+    def foto_url(self): # Adicionada para facilitar o acesso à URL da foto no template
+        principal_foto = self.fotos_set.filter(is_principal=True).first()
+        if principal_foto and principal_foto.foto:
+            return principal_foto.foto.url
+        return settings.STATIC_URL + 'images/no-photo.png' # Assumindo uma imagem padrão
+
     def calcular_idade(self):
         if self.dataNascimento:
             hoje = date.today()
@@ -117,24 +136,28 @@ class Animal(models.Model):
         return None
 
     def definir_data_nascimento(self):
-        if not self.dataNascimento and self.idadeEstimada:
+        if not self.dataNascimento and self.idadeEstimada is not None:
             hoje = date.today()
             self.dataNascimento = date(hoje.year - self.idadeEstimada, hoje.month, hoje.day)
 
     def clean(self):
         super().clean()
-        # Se tiver data de nascimento, calcula a idade
         if self.dataNascimento:
             self.idadeEstimada = self.calcular_idade()
-        # Se tiver idade estimada mas não tiver data de nascimento, define a data
-        elif self.idadeEstimada and not self.dataNascimento:
+        elif self.idadeEstimada is not None and not self.dataNascimento:
             self.definir_data_nascimento()
+        
 
     def __str__(self):
         return f"{self.get_tipo_display()} - {self.nome}"
 
+    class Meta:
+        verbose_name = "Animal"
+        verbose_name_plural = "Animais"
+        ordering = ['-entrada_instituicao'] # Ordena os animais pelos mais recentes primeiro
+
 class Like(models.Model):
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # Referencia o modelo de usuário
     animal = models.ForeignKey('Animal', on_delete=models.CASCADE, related_name='likes')
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -149,8 +172,16 @@ class Like(models.Model):
 
 class Adocao(models.Model):
     animal = models.ForeignKey('Animal', on_delete=models.CASCADE)
-    adotante = models.ForeignKey('User', on_delete=models.CASCADE)
+    adotante = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # Referencia o modelo de usuário
     data_requisicao = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Solicitação de Adoção'
+        verbose_name_plural = 'Solicitações de Adoção'
+        ordering = ['-data_requisicao']
+
+    def __str__(self):
+        return f"Adoção de {self.animal.nome} por {self.adotante.username}"
 
 class Dose(models.Model):
     nome = models.CharField(max_length=255)
@@ -169,7 +200,7 @@ class RacaCachorro(models.Model):
 
     @classmethod
     def get_default_raca(cls):
-        raca, created = cls.objects.get_or_create(nome="Sem raça definida")
+        raca, created = cls.objects.get_or_create(nome="SRD") # Alterado para "SRD" para consistência com o sinal
         return raca
 
     class Meta:
@@ -179,7 +210,7 @@ class RacaCachorro(models.Model):
 
 class Cachorro(models.Model):
     porte = models.IntegerField(choices=[(1, 'Pequeno'), (2, 'Médio'), (3, 'Grande')])
-    raca = models.ForeignKey('RacaCachorro', on_delete=models.CASCADE)
+    raca = models.ForeignKey('RacaCachorro', on_delete=models.SET_DEFAULT, default=RacaCachorro.get_default_raca) # Usa SET_DEFAULT
     animal = models.OneToOneField('Animal', on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
@@ -187,8 +218,7 @@ class Cachorro(models.Model):
             raise ValidationError('É necessário criar um registro de Animal primeiro.')
         if self.animal.tipo != 'CACHORRO':
             raise ValidationError('O tipo do animal deve ser Cachorro.')
-        if not self.raca_id:
-            self.raca = RacaCachorro.get_default_raca()
+        # A raça padrão agora é tratada pelo 'default' no campo ForeignKey
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -202,7 +232,7 @@ class RacaGato(models.Model):
 
     @classmethod
     def get_default_raca(cls):
-        raca, created = cls.objects.get_or_create(nome="Sem raça definida")
+        raca, created = cls.objects.get_or_create(nome="SRD") # Alterado para "SRD" para consistência com o sinal
         return raca
 
     class Meta:
@@ -211,7 +241,7 @@ class RacaGato(models.Model):
         ordering = ['nome']
 
 class Gato(models.Model):
-    raca = models.ForeignKey('RacaGato', on_delete=models.CASCADE)
+    raca = models.ForeignKey('RacaGato', on_delete=models.SET_DEFAULT, default=RacaGato.get_default_raca) # Usa SET_DEFAULT
     animal = models.OneToOneField('Animal', on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
@@ -219,8 +249,7 @@ class Gato(models.Model):
             raise ValidationError('É necessário criar um registro de Animal primeiro.')
         if self.animal.tipo != 'GATO':
             raise ValidationError('O tipo do animal deve ser Gato.')
-        if not self.raca_id:
-            self.raca = RacaGato.get_default_raca()
+        # A raça padrão agora é tratada pelo 'default' no campo ForeignKey
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -231,6 +260,7 @@ def create_animal_type(sender, instance, created, **kwargs):
     if created:
         if instance.tipo == 'CACHORRO':
             raca_default = RacaCachorro.objects.get_or_create(nome="SRD")[0]
+            # O porte default 2 (Médio) foi mantido.
             Cachorro.objects.create(animal=instance, raca=raca_default, porte=2)
         elif instance.tipo == 'GATO':
             raca_default = RacaGato.objects.get_or_create(nome="SRD")[0]

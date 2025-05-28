@@ -175,60 +175,9 @@
         // When tipo changes, load the specific fields via AJAX
         $tipoField.on('change', function() {
             var selectedType = $(this).val();
-            console.log('Type changed to:', selectedType);
-            
-            // Save current form values
-            var formData = new FormData($form[0]);
-            
-            // Add the tipo parameter to the current URL without reloading
             var url = new URL(window.location.href);
             url.searchParams.set('tipo', selectedType);
-            window.history.pushState({}, '', url.toString());
-            
-            // Make AJAX request to get the new form
-            $.ajax({
-                url: window.location.href,
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                success: function(response) {
-                    // Create a temporary div to hold the response
-                    var $temp = $('<div>').html(response);
-                    
-                    // Find the fieldsets in the response
-                    var $newFieldsets = $temp.find('fieldset');
-                    
-                    // Replace only the type-specific fieldset
-                    var typeFieldsetIndex = selectedType === 'CACHORRO' ? 1 : 1;
-                    var $currentFieldsets = $form.find('fieldset');
-                    
-                    if ($currentFieldsets.length > typeFieldsetIndex) {
-                        // If the type-specific fieldset exists, replace it
-                        $currentFieldsets.eq(typeFieldsetIndex).replaceWith(
-                            $newFieldsets.eq(typeFieldsetIndex)
-                        );
-                    } else {
-                        // If it doesn't exist, insert it after the first fieldset
-                        $currentFieldsets.eq(0).after($newFieldsets.eq(typeFieldsetIndex));
-                    }
-                    
-                    // Restore form values
-                    var $inputs = $form.find('input, select, textarea').not('[type="hidden"]');
-                    $inputs.each(function() {
-                        var name = $(this).attr('name');
-                        if (name && formData.has(name)) {
-                            $(this).val(formData.get(name));
-                        }
-                    });
-                    
-                    // Show/hide fields after AJAX update
-                    showHideFields();
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error loading fields:', error);
-                }
-            });
+            window.location.href = url.toString(); // Recarrega a página com o tipo selecionado
         });
 
         // Initial setup when page loads
