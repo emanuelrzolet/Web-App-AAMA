@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',  # Required for allauth
     'core',
     'adocao',
+    'usuarios',
     
     # Third party apps
     'allauth',
@@ -174,6 +175,9 @@ MESSAGE_TAGS = {
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# Custom user model
+AUTH_USER_MODEL = 'usuarios.User'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -230,4 +234,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'core.User'
+# AUTH_USER_MODEL antigo removido. Novo valor já está definido acima como 'usuarios.User'.

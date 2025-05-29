@@ -1,6 +1,5 @@
 # core/models.py
 from django.db import models
-from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -10,16 +9,6 @@ from django.utils import timezone
 from django.conf import settings # Importar settings para referenciar AUTH_USER_MODEL
 
 # Create your models here.
-
-class User(AbstractUser):
-    telefone = models.CharField(max_length=20, null=True, blank=True)
-    profissao = models.CharField(max_length=100, null=True, blank=True)
-    estado_civil = models.CharField(max_length=20, null=True, blank=True)
-    is_active = models.BooleanField(default=True)
-    is_superuser = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(auto_now_add=True)
-    last_login = models.DateTimeField(null=True, blank=True)
 
 class Endereco(models.Model):
     bairro = models.CharField(max_length=100)
@@ -195,6 +184,24 @@ class RacaCachorro(models.Model):
 
     @classmethod
     def get_default_raca(cls):
+        raca, created = cls.objects.get_or_create(nome="Sem raça definida")
+        return raca
+
+    @classmethod
+    def get_default_raca_id(cls):
+        return cls.get_default_raca().id
+
+    class Meta:
+        verbose_name = 'Raça de Cachorro'
+        verbose_name_plural = 'Raças de Cachorro'
+        ordering = ['nome']
+    nome = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.nome
+
+    @classmethod
+    def get_default_raca(cls):
         raca, created = cls.objects.get_or_create(nome="Sem raça definida") # Alterado para "Sem raça definida" para consistência com o sinal
         return raca
 
@@ -205,7 +212,8 @@ class RacaCachorro(models.Model):
 
 class Cachorro(models.Model):
     porte = models.IntegerField(choices=[(1, 'Pequeno'), (2, 'Médio'), (3, 'Grande')])
-    raca = models.ForeignKey('RacaCachorro', on_delete=models.SET_DEFAULT, default=RacaCachorro.get_default_raca) # Usa SET_DEFAULT
+    raca = models.ForeignKey('RacaCachorro', on_delete=models.SET_NULL, null=True)
+ # Usa SET_NULL
     animal = models.OneToOneField('Animal', on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
@@ -230,13 +238,17 @@ class RacaGato(models.Model):
         raca, created = cls.objects.get_or_create(nome="Sem raça definida") # Alterado para "Sem raça definida" para consistência com o sinal
         return raca
 
+    @classmethod
+    def get_default_raca_id(cls):
+        return cls.get_default_raca().id
+
     class Meta:
         verbose_name = 'Raça de Gato'
         verbose_name_plural = 'Raças de Gato'
         ordering = ['nome']
 
 class Gato(models.Model):
-    raca = models.ForeignKey('RacaGato', on_delete=models.SET_DEFAULT, default=RacaGato.get_default_raca) # Usa SET_DEFAULT
+    raca = models.ForeignKey('RacaGato', on_delete=models.SET_NULL, null=True) # Usa SET_NULL
     animal = models.OneToOneField('Animal', on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):

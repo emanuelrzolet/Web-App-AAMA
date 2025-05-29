@@ -23,6 +23,7 @@ from allauth.socialaccount.providers.google.views import oauth2_login
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),  # Authentication URLs
+    path('usuarios/', include('usuarios.urls')),
     path('', include('adocao.urls')),
     path('', include('core.urls')),
     # path('google/login/', oauth2_login, name='google_login'), TESTE PARA REMOVER LINHA DESNECESSÁRIA

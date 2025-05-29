@@ -10,7 +10,6 @@ urlpatterns = [
     path('api/animals/', views.load_animals, name='load_animals'),
     path('api/racas/', views.get_racas, name='get_racas'),
     path('api/adocao/', views.create_adocao, name='create_adocao'),
-    path('profile/', views.profile, name='profile'),
     
     # Authentication URLs are handled by django-allauth through /accounts/
     path('animal/list/', views.animal_list, name='animal_list'),

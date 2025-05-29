@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib import messages
 from .models import Animal, RacaCachorro, RacaGato, Like
-from .forms import UserRegistrationForm
 from django.views.decorators.csrf import csrf_protect
 
 def home(request):
@@ -129,25 +128,6 @@ def create_adocao(request):
         
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
-
-def register(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, 'Registro realizado com sucesso!')
-            return redirect('home')
-        else:
-            messages.error(request, 'Erro ao registrar. Por favor, corrija os erros abaixo.')
-    else:
-        form = UserRegistrationForm()
-    
-    return render(request, 'core/registration/register.html', {'form': form})
-
-@login_required
-def profile(request):
-    return render(request, 'core/profile.html')
 
 @csrf_protect
 def add_raca_cachorro(request):

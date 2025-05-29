@@ -6,7 +6,7 @@ from django.urls import path, reverse
 from django.http import HttpResponseRedirect
 from .forms import AnimalTypeForm, AnimalForm, CachorroForm, GatoForm
 from .models import (
-    User, Animal, Cachorro, Gato, 
+    Animal, Cachorro, Gato, 
     RacaCachorro, RacaGato, Dose, Vacinas, Endereco, FotoAnimal
 )
 
@@ -240,11 +240,3 @@ class EnderecoAdmin(admin.ModelAdmin):
     list_display = ('logradouro', 'numero', 'bairro', 'cep')
     search_fields = ('logradouro', 'bairro', 'cep')
 
-# Customize the User admin
-class CustomUserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'first_name', 'last_name', 'telefone', 'is_staff')
-    fieldsets = UserAdmin.fieldsets + (
-        ('Informações Adicionais', {'fields': ('telefone', 'profissao', 'estado_civil')}),
-    )
-
-admin.site.register(User, CustomUserAdmin)
