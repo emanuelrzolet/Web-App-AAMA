@@ -43,7 +43,12 @@ def profile(request):
         adotante_form = AdotanteProfileForm(instance=adotante)
         endereco_formset = EnderecoFormSet(instance=adotante)
 
-    return render(request, 'core/profile.html', {
+    # Importação adiada para evitar import circular
+    from adocao.models import Adocao
+    solicitacoes_doacao = Adocao.objects.filter(usuario=user)
+
+    return render(request, 'profile.html', {
         'adotante_form': adotante_form,
         'endereco_formset': endereco_formset,
+        'solicitacoes_doacao': solicitacoes_doacao,
     })
