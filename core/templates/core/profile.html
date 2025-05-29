@@ -1,0 +1,55 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Perfil de Adotante</h2>
+  <form method="post">
+    {% csrf_token %}
+    <fieldset class="border p-3 mb-3">
+      <legend class="w-auto">Dados do Adotante</legend>
+      {{ adotante_form.as_p }}
+    </fieldset>
+    <fieldset class="border p-3 mb-3">
+      <legend class="w-auto">Endereços</legend>
+      {{ endereco_formset.management_form }}
+      {% for form in endereco_formset %}
+        <div class="endereco-form border rounded p-2 mb-2">
+          {{ form.as_p }}
+        </div>
+      {% endfor %}
+      <button type="button" id="add-endereco" class="btn btn-secondary">Adicionar Endereço</button>
+    </fieldset>
+    <button type="submit" class="btn btn-primary">Salvar Perfil</button>
+  </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+// Busca CEP e preenche campos automaticamente
+$(document).on('blur', 'input[name$="-cep"]', function() {
+  var $cep = $(this);
+  var cep = $cep.val().replace(/\D/g, '');
+  if (cep.length === 8) {
+    $.getJSON('https://viacep.com.br/ws/' + cep + '/json/', function(data) {
+      if (!data.erro) {
+        var prefix = $cep.attr('name').replace('-cep', '');
+        $('input[name="' + prefix + '-bairro"]').val(data.bairro);
+        $('input[name="' + prefix + '-logradouro"]').val(data.logradouro);
+        $('input[name="' + prefix + '-complemento"]').val(data.complemento);
+      }
+    });
+  }
+});
+// Adicionar novo endereço (inline formset)
+$('#add-endereco').on('click', function() {
+  var total = $('#id_endereco_set-TOTAL_FORMS');
+  var current = parseInt(total.val());
+  var empty = $('.endereco-form:last').clone(true);
+  empty.find('input').val('');
+  empty.find('input[type=hidden]').remove();
+  empty.insertAfter('.endereco-form:last');
+  total.val(current + 1);
+});
+</script>
+{% endblock %}

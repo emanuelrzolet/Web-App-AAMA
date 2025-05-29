@@ -1,6 +1,30 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
+from .models import User, AdotanteProfile, Endereco
+
+class AdotanteProfileForm(forms.ModelForm):
+    class Meta:
+        model = AdotanteProfile
+        fields = ['telefone', 'profissao', 'estado_civil', 'cpf']
+
+    def clean_cpf(self):
+        cpf = self.cleaned_data['cpf']
+        cpf = ''.join(filter(str.isdigit, cpf))
+        if len(cpf) != 11:
+            raise forms.ValidationError('CPF deve ter 11 dígitos.')
+        # Validação simplificada, pode ser expandida
+        return cpf
+
+class EnderecoForm(forms.ModelForm):
+    class Meta:
+        model = Endereco
+        fields = ['bairro', 'logradouro', 'numero', 'complemento', 'cep']
+
+EnderecoFormSet = forms.inlineformset_factory(
+    AdotanteProfile, Endereco, form=EnderecoForm,
+    fields=['bairro', 'logradouro', 'numero', 'complemento', 'cep'],
+    extra=1, can_delete=True
+)
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
