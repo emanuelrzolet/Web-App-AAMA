@@ -776,18 +776,18 @@
 
 	// Infinite scroll
 	window.addEventListener("scroll", () => {
-		if (
-			window.innerHeight + window.scrollY >=
-			document.documentElement.scrollHeight - 100
-		) {
-			loadAnimals();
-		}
-	});
-
-	// Carrega os primeiros animais
-	document.addEventListener("DOMContentLoaded", () => {
+	if (
+		window.innerHeight + window.scrollY >=
+		document.documentElement.scrollHeight - 100
+	) {
 		loadAnimals();
-		initializeLikeButtons();
-	});
+	}
+});
+
+// Carrega os primeiros animais
+document.addEventListener("DOMContentLoaded", () => {
+	loadAnimals(true); // Sempre reseta o grid ao carregar a página
+	initializeLikeButtons();
+});
 </script>
 {% endblock extra_js %}

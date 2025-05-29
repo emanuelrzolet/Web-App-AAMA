@@ -5,23 +5,63 @@
 		{% csrf_token %}
 		<fieldset class="border p-3 mb-3">
 			<legend class="w-auto">Dados do Adotante</legend>
-			{{ adotante_form.as_p }}
+      <div class="mb-2">
+        {{ adotante_form.first_name.label_tag }}
+        {{ adotante_form.first_name }}
+      </div>
+      <div class="mb-2">
+        {{ adotante_form.last_name.label_tag }}
+        {{ adotante_form.last_name }}
+      </div>
+      <div class="mb-2">
+        {{ adotante_form.telefone.label_tag }}
+        {{ adotante_form.telefone }}
+      </div>
+      <div class="mb-2">
+        {{ adotante_form.profissao.label_tag }}
+        {{ adotante_form.profissao }}
+      </div>
+      <div class="mb-2">
+        {{ adotante_form.estado_civil.label_tag }}
+        {{ adotante_form.estado_civil }}
+      </div>
+      <div class="mb-2">
+        {{ adotante_form.cpf.label_tag }}
+        {{ adotante_form.cpf }}
+      </div>
 		</fieldset>
 		<fieldset class="border p-3 mb-3">
 			<legend class="w-auto">Endereços</legend>
 			{{ endereco_formset.management_form }} {% for form in endereco_formset %}
-			<div class="endereco-form border rounded p-2 mb-2">
-				{{ form.as_p }} {% if form.instance.pk %}
-				<div class="form-check">
-					{{ form.DELETE }}
-					<label class="form-check-label">Apagar endereço</label>
-				</div>
-				{% endif %}
-			</div>
-			{% endfor %}
-			<button type="button" id="add-endereco" class="btn btn-secondary">
-				Adicionar Endereço
-			</button>
+        <div class="endereco-form border rounded p-2 mb-2">
+          <div class="row">
+  <div class="col-md-4 mb-2">
+    {{ form.cep.label_tag }}
+    {{ form.cep }}
+  </div>
+  <div class="col-md-4 mb-2">
+    {{ form.logradouro.label_tag }}
+    {{ form.logradouro }}
+  </div>
+  <div class="col-md-2 mb-2">
+    {{ form.numero.label_tag }}
+    {{ form.numero }}
+  </div>
+  <div class="col-md-4 mb-2">
+    {{ form.bairro.label_tag }}
+    {{ form.bairro }}
+  </div>
+  <div class="col-md-4 mb-2">
+    {{ form.complemento.label_tag }}
+    {{ form.complemento }}
+  </div>
+</div>
+<div class="form-check">
+  {{ form.DELETE }} <label class="form-check-label">Apagar endereço</label>
+</div>
+        </div>
+      {% endfor %}
+      <button type="button" id="add-endereco" class="btn btn-secondary">Adicionar Endereço</button>
 		</fieldset>
 		<button type="submit" class="btn btn-primary">Salvar Perfil</button>
 	</form>

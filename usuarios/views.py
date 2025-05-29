@@ -29,7 +29,7 @@ def profile(request):
         adotante = None
 
     if request.method == 'POST':
-        adotante_form = AdotanteProfileForm(request.POST, instance=adotante)
+        adotante_form = AdotanteProfileForm(request.POST, instance=adotante, user=user)
         endereco_formset = EnderecoFormSet(request.POST, instance=adotante)
         if adotante_form.is_valid() and endereco_formset.is_valid():
             adotante = adotante_form.save(commit=False)
@@ -40,7 +40,7 @@ def profile(request):
             messages.success(request, 'Perfil atualizado com sucesso!')
             return redirect('profile')
     else:
-        adotante_form = AdotanteProfileForm(instance=adotante)
+        adotante_form = AdotanteProfileForm(instance=adotante, user=user)
         endereco_formset = EnderecoFormSet(instance=adotante)
 
     # Importação adiada para evitar import circular

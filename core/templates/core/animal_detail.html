@@ -280,7 +280,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	</div>
 </div>
 {% endblock %}
-
 {% block extra_js %}
 <script src="{% static 'js/likes.js' %}"></script>
 <script>
@@ -314,7 +313,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Solicitação de adoção enviada com sucesso!');
+                        // WhatsApp da instituição (exemplo)
+                        const numero = '5551999999999';
+                        const nomeAnimal = '{{ animal.nome|escapejs }}';
+                        const mensagem = encodeURIComponent('Olá! Gostaria de informar que solicitei a adoção do animal: ' + nomeAnimal + '. Aguardo orientações.');
+                        window.open('https://wa.me/' + numero + '?text=' + mensagem, '_blank');
+                        alert('Solicitação de adoção enviada com sucesso! Você será redirecionado para o WhatsApp da instituição.');
                         window.location.reload();
                     } else {
                         alert(data.error || 'Erro ao processar a solicitação.');
@@ -329,6 +333,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     {% endif %}
 });
-
 </script>
 {% endblock %}

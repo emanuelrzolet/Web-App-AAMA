@@ -1,6 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_vi8ews
 from . import views
+from .views_api import tem_perfil_adotante
 
 urlpatterns = [
     path('get_cores/', views.get_cores, name='get_cores'),
@@ -10,6 +11,7 @@ urlpatterns = [
     path('api/animals/', views.load_animals, name='load_animals'),
     path('api/racas/', views.get_racas, name='get_racas'),
     path('api/adocao/', views.create_adocao, name='create_adocao'),
+    path('api/tem_perfil_adotante/', tem_perfil_adotante, name='tem_perfil_adotante'),
     
     # Authentication URLs are handled by django-allauth through /accounts/
     path('animal/list/', views.animal_list, name='animal_list'),
