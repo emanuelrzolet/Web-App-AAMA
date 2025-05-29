@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         // WhatsApp da instituição (exemplo)
                         const numero = '5554996813201';
                         const nomeAnimal = '{{ animal.nome|escapejs }}';
-                        const mensagem = encodeURIComponent('Olá! Gostaria de informar que solicitei a adoção do animal: ' + nomeAnimal + '. Aguardo orientações.');
+                        const mensagem = encodeURIComponent('Olá! Gostaria de informar que solicitei a adoção do animal: ' + nomeAnimal + '. {Aquivai o arquivo pdf ou os dados para preenchimento da documentaçao}.');
                         window.open('https://wa.me/' + numero + '?text=' + mensagem, '_blank');
                         alert('Solicitação de adoção enviada com sucesso! Você será redirecionado para o WhatsApp da instituição.');
                         window.location.reload();
