@@ -35,15 +35,34 @@
 body {
 	font-family: "Poppins", sans-serif;
 	background-color: var(--bs-body-bg);
-	color: var(--bs-body-color);
+	color: #ffffff;  /* Texto branco fixo para o conteúdo principal */
 	transition: all 0.3s ease;
 }
 
-/* Navbar */
-.navbar {
+/* Navbar e Footer - mantém as cores alternando */
+.navbar,
+footer {
 	background-color: var(--bs-body-bg);
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	padding: 1rem 0;
+	color: var(--bs-body-color);  /* Permite alternar as cores */
+}
+
+.navbar-brand,
+.nav-link,
+.navbar-toggler,
+.theme-toggle,
+footer a,
+footer p,
+footer .contact-info {
+	color: var(--bs-body-color);  /* Mantém alternando as cores na navbar e footer */
+}
+
+/* Resto do conteúdo com texto branco */
+.chat-message,
+.animal-card,
+.btn-secondary,
+.btn-link,
+.content-area {
+	color: #ffffff !important;  /* Força o texto branco em outras áreas */
 }
 
 .navbar-brand {
