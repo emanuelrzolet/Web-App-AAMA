@@ -10,6 +10,7 @@ urlpatterns = [
     path("donate/", views.donate, name='donate'),
     path("about/", views.about, name='about'),
     path("volunteering/", views.volunteering, name='volunteering'),
+    path('nfc', views.nfc, name='nfc'),
     path('animal/<int:pk>/', views.animal_detail, name='animal_detail'),
     path('api/animals/', views.load_animals, name='load_animals'),
     path('api/racas/', views.get_racas, name='get_racas'),

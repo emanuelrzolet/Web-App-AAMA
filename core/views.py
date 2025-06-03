@@ -20,6 +20,9 @@ def donate(request):
 def volunteering(request):
     return render(request, 'volunteering/index.html')
 
+def nfc(request):
+    return render(request, 'nfc/index.html')
+
 def animal_list(request):
     return render(request, 'core/animal_list.html')
 
