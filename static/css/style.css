@@ -3,8 +3,8 @@
 	/* Tema Claro */
 	--primary-color: #ffd700;
 	--primary-hover: #ffe44d;
-	--light-bg: #ffffff;
-	--light-bg-secondary: #f8f9fa;
+	--light-bg: #ffe99d;
+	--light-bg-secondary: #ffe99d;
 	--light-text: #212529;
 	--dark-bg: #1a1a1a;
 	--dark-bg-secondary: #2d2d2d;
@@ -35,7 +35,7 @@
 body {
 	font-family: "Poppins", sans-serif;
 	background-color: var(--bs-body-bg);
-	color: #ffffff;  /* Texto branco fixo para o conteúdo principal */
+	color: #ffffff; /* Texto branco fixo para o conteúdo principal */
 	transition: all 0.3s ease;
 }
 
@@ -43,7 +43,7 @@ body {
 .navbar,
 footer {
 	background-color: var(--bs-body-bg);
-	color: var(--bs-body-color);  /* Permite alternar as cores */
+	color: var(--bs-body-color); /* Permite alternar as cores */
 }
 
 .navbar-brand,
@@ -53,7 +53,9 @@ footer {
 footer a,
 footer p,
 footer .contact-info {
-	color: var(--bs-body-color);  /* Mantém alternando as cores na navbar e footer */
+	color: var(
+		--bs-body-color
+	); /* Mantém alternando as cores na navbar e footer */
 }
 
 /* Resto do conteúdo com texto branco */
@@ -62,7 +64,7 @@ footer .contact-info {
 .btn-secondary,
 .btn-link,
 .content-area {
-	color: #ffffff !important;  /* Força o texto branco em outras áreas */
+	color: #ffffff !important; /* Força o texto branco em outras áreas */
 }
 
 .navbar-brand {
@@ -216,7 +218,6 @@ footer a:hover {
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	transition: transform 0.2s;
 }
-
 
 .animal-card:hover {
 	transform: translateY(-5px);

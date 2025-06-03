@@ -70,7 +70,7 @@ class AnimalAdmin(admin.ModelAdmin):
         # Base fieldsets that are always shown
         fieldsets = [
             ('Informações Básicas', {
-                'fields': (('nome', 'tipo'), ('cor', 'add_cor')),
+                'fields': (('tipo', 'nome'), ('cor', 'add_cor')),
                 'classes': ('wide',)
             }),
         ]
@@ -104,7 +104,7 @@ class AnimalAdmin(admin.ModelAdmin):
                 'description': 'Adicione informações sobre o animal, seu comportamento, história, etc.'
             }),
             ('Status', {
-                'fields': ('status', 'pertence_instituicao', 'saida_instituicao', 'entrada_instituicao'),
+                'fields': ('status', 'pertence_instituicao', 'entrada_instituicao') if obj is None else ('status', 'pertence_instituicao', 'saida_instituicao', 'entrada_instituicao'),
                 'classes': ('wide',)
             }),
         ])
