@@ -3,57 +3,116 @@
 	<h2>Perfil de Adotante</h2>
 	<form method="post">
 		{% csrf_token %}
+
+		<!-- Erros gerais do AdotanteForm -->
+		{% if adotante_form.non_field_errors %}
+			<div class="alert alert-danger">
+				{% for error in adotante_form.non_field_errors %}
+					<p>{{ error }}</p>
+				{% endfor %}
+			</div>
+		{% endif %}
 		<fieldset class="border p-3 mb-3">
 			<legend class="w-auto">Dados do Adotante</legend>
       <div class="mb-2">
         {{ adotante_form.first_name.label_tag }}
         {{ adotante_form.first_name }}
+			{% if adotante_form.first_name.errors %}
+				<div class="text-danger">
+					{% for error in adotante_form.first_name.errors %}{{ error }}{% endfor %}
+				</div>
+			{% endif %}
       </div>
       <div class="mb-2">
         {{ adotante_form.last_name.label_tag }}
         {{ adotante_form.last_name }}
+			{% if adotante_form.last_name.errors %}
+				<div class="text-danger">
+					{% for error in adotante_form.last_name.errors %}{{ error }}{% endfor %}
+				</div>
+			{% endif %}
       </div>
       <div class="mb-2">
         {{ adotante_form.telefone.label_tag }}
         {{ adotante_form.telefone }}
+			{% if adotante_form.telefone.errors %}
+				<div class="text-danger">
+					{% for error in adotante_form.telefone.errors %}{{ error }}{% endfor %}
+				</div>
+			{% endif %}
       </div>
       <div class="mb-2">
         {{ adotante_form.profissao.label_tag }}
         {{ adotante_form.profissao }}
+			{% if adotante_form.profissao.errors %}
+				<div class="text-danger">
+					{% for error in adotante_form.profissao.errors %}{{ error }}{% endfor %}
+				</div>
+			{% endif %}
       </div>
       <div class="mb-2">
         {{ adotante_form.estado_civil.label_tag }}
         {{ adotante_form.estado_civil }}
+			{% if adotante_form.estado_civil.errors %}
+				<div class="text-danger">
+					{% for error in adotante_form.estado_civil.errors %}{{ error }}{% endfor %}
+				</div>
+			{% endif %}
       </div>
       <div class="mb-2">
         {{ adotante_form.cpf.label_tag }}
         {{ adotante_form.cpf }}
+			{% if adotante_form.cpf.errors %}
+				<div class="text-danger">
+					{% for error in adotante_form.cpf.errors %}{{ error }}{% endfor %}
+				</div>
+			{% endif %}
       </div>
 		</fieldset>
 		<fieldset class="border p-3 mb-3">
 			<legend class="w-auto">Endereços</legend>
+			<!-- Erros gerais do EnderecoFormSet -->
+			{% if endereco_formset.non_form_errors %}
+				<div class="alert alert-danger">
+					{% for error in endereco_formset.non_form_errors %}
+						<p>{{ error }}</p>
+					{% endfor %}
+				</div>
+			{% endif %}
 			{{ endereco_formset.management_form }} {% for form in endereco_formset %}
         <div class="endereco-form border rounded p-2 mb-2">
+					{% if form.non_field_errors %}
+						<div class="alert alert-danger">
+							{% for error in form.non_field_errors %}
+								<p>{{ error }}</p>
+							{% endfor %}
+						</div>
+					{% endif %}
           <div class="row">
   <div class="col-md-4 mb-2">
     {{ form.cep.label_tag }}
     {{ form.cep }}
+					{% if form.cep.errors %}<div class="text-danger">{% for error in form.cep.errors %}{{ error }}{% endfor %}</div>{% endif %}
   </div>
   <div class="col-md-4 mb-2">
     {{ form.logradouro.label_tag }}
     {{ form.logradouro }}
+					{% if form.logradouro.errors %}<div class="text-danger">{% for error in form.logradouro.errors %}{{ error }}{% endfor %}</div>{% endif %}
   </div>
   <div class="col-md-2 mb-2">
     {{ form.numero.label_tag }}
     {{ form.numero }}
+					{% if form.numero.errors %}<div class="text-danger">{% for error in form.numero.errors %}{{ error }}{% endfor %}</div>{% endif %}
   </div>
   <div class="col-md-4 mb-2">
     {{ form.bairro.label_tag }}
     {{ form.bairro }}
+					{% if form.bairro.errors %}<div class="text-danger">{% for error in form.bairro.errors %}{{ error }}{% endfor %}</div>{% endif %}
   </div>
   <div class="col-md-4 mb-2">
     {{ form.complemento.label_tag }}
     {{ form.complemento }}
+					{% if form.complemento.errors %}<div class="text-danger">{% for error in form.complemento.errors %}{{ error }}{% endfor %}</div>{% endif %}
   </div>
 </div>
 <div class="form-check">

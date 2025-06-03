@@ -3,6 +3,7 @@ from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegistrationForm, AdotanteProfileForm, EnderecoFormSet
+from .models import AdotanteProfile  # Importar AdotanteProfile
 
 
 def register(request):
@@ -25,20 +26,22 @@ def profile(request):
     user = request.user
     try:
         adotante = user.adotante_profile
-    except Exception:
+    except AdotanteProfile.DoesNotExist:
         adotante = None
 
     if request.method == 'POST':
         adotante_form = AdotanteProfileForm(request.POST, instance=adotante, user=user)
         endereco_formset = EnderecoFormSet(request.POST, instance=adotante)
         if adotante_form.is_valid() and endereco_formset.is_valid():
-            adotante = adotante_form.save(commit=False)
-            adotante.user = user
-            adotante.save()
-            endereco_formset.instance = adotante
+            adotante_instance = adotante_form.save(commit=False)
+            if not adotante_instance.pk: # Se é uma nova instância (sem pk)
+                adotante_instance.user = user
+            adotante_instance.save()
+            adotante = adotante_instance # Atualiza a referência para a instância salva
+            endereco_formset.instance = adotante # Usa a instância de adotante (nova ou atualizada)
             endereco_formset.save()
             messages.success(request, 'Perfil atualizado com sucesso!')
-            return redirect('profile')
+            return redirect('usuarios:profile') # Usar namespace
     else:
         adotante_form = AdotanteProfileForm(instance=adotante, user=user)
         endereco_formset = EnderecoFormSet(instance=adotante)

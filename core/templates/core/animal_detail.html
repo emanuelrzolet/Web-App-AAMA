@@ -321,7 +321,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         alert('Solicitação de adoção enviada com sucesso! Você será redirecionado para o WhatsApp da instituição.');
                         window.location.reload();
                     } else {
-                        alert(data.error || 'Erro ao processar a solicitação.');
+                        if (data.redirect_url) {
+                            alert(data.error || 'Erro ao processar a solicitação.');
+                            window.location.href = data.redirect_url;
+                        } else {
+                            alert(data.error || 'Erro ao processar a solicitação.');
+                        }
                     }
                 })
                 .catch(error => {
