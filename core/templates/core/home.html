@@ -41,6 +41,24 @@
 		margin-bottom: 1.5rem;
 	}
 
+	.sticky-filter-btn {
+	position: sticky;
+	top: 0.5rem;
+	display: flex;
+	justify-content: flex-end;
+	z-index: 10;
+	background: transparent;
+}
+
+@media (max-width: 900px) {
+	.sticky-filter-btn {
+		top: 0.3rem;
+		padding-right: 0.5rem;
+	}
+}
+
+
+
 	.filter-btn {
 		background: #ffd700;
 		border: none;
@@ -273,22 +291,24 @@
 
 	<div class="chat-message" id="animais-adocao">
 		<h2 class="h4 mb-3">Animais para Adoção</h2>
-		<div class="filter-section">
-			<button class="filter-btn" id="openFilters">
-				<i class="fas fa-filter"></i>
-				Filtrar Animais
-			</button>
-		</div>
-		<div id="activeFilters" class="active-filters">
-			<!-- Filtros ativos vao aqui -->
-		</div>
-		<div id="animal-grid">
-			<!-- Cards serão carregados aqui via JavaScript -->
-		</div>
-		<div class="text-center mt-4">
-			<div id="loading" class="d-none">
-				<div class="spinner-border text-primary" role="status">
-					<span class="visually-hidden">Carregando...</span>
+		<div id="animal-grid-wrapper" style="position:relative;">
+			<div class="filter-section sticky-filter-btn">
+				<button class="filter-btn" id="openFilters">
+					<i class="fas fa-filter"></i>
+					Filtrar Animais
+				</button>
+			</div>
+			<div id="activeFilters" class="active-filters">
+				<!-- Filtros ativos vao aqui -->
+			</div>
+			<div id="animal-grid">
+				<!-- Cards serão carregados aqui via JavaScript -->
+			</div>
+			<div class="text-center mt-4">
+				<div id="loading" class="d-none">
+					<div class="spinner-border text-primary" role="status">
+						<span class="visually-hidden">Carregando...</span>
+					</div>
 				</div>
 			</div>
 		</div>
