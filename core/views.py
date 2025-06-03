@@ -14,6 +14,9 @@ def home(request):
 def about(request):
     return render(request, 'about/index.html')
 
+def donate(request):
+    return render(request, 'donate/index.html')
+
 def animal_list(request):
     return render(request, 'core/animal_list.html')
 

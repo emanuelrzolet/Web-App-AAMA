@@ -6,8 +6,9 @@ from .views_api import tem_perfil_adotante
 urlpatterns = [
     path('get_cores/', views.get_cores, name='get_cores'),
     path('', views.home, name='home'),
-    path("about/", views.about, name='about'),
     path('adotar/', views.animal_list, name='animal_list'),
+    path("donate/", views.donate, name='donate'),
+    path("about/", views.about, name='about'),
     path('animal/<int:pk>/', views.animal_detail, name='animal_detail'),
     path('api/animals/', views.load_animals, name='load_animals'),
     path('api/racas/', views.get_racas, name='get_racas'),
