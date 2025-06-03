@@ -153,6 +153,13 @@
     .status-badge.adopted {
         background: #F44336;
     }
+
+    .profile-info h4 {
+        color: #FFD700; /* Cor dos títulos das abas ativas anteriores */
+        font-size: 1.5rem; /* Tamanho um pouco maior para destaque */
+        margin-top: 1.5rem; /* Espaçamento acima do título */
+        margin-bottom: 0.75rem; /* Espaçamento abaixo do título, antes do conteúdo */
+    }
 </style>
 {% endblock %}
 
@@ -215,16 +222,13 @@ document.addEventListener('DOMContentLoaded', function() {
 				</div>
 			</div>
 
-			<div class="tab-navigation">
-				<button class="tab-button active" data-tab="sobre">Sobre</button>
-				<button class="tab-button" data-tab="caracteristicas">Características</button>
-			</div>
-
-			<div id="sobre" class="tab-content active">
+			<div id="sobre" class="mt-3">
+				<h4>Sobre</h4>
 				<p>{{ animal.descricao }}</p>
 			</div>
 
-			<div id="caracteristicas" class="tab-content">
+			<div id="caracteristicas" class="mt-3">
+				<h4>Características</h4>
 				<div class="characteristics-grid">
 					<div class="characteristic-item">
 						<div class="characteristic-label">Pelagem</div>
@@ -284,15 +288,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="{% static 'js/likes.js' %}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Tabs
-    document.querySelectorAll('.tab-button').forEach(button => {
-        button.addEventListener('click', () => {
-            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            button.classList.add('active');
-            document.getElementById(button.dataset.tab).classList.add('active');
-        });
-    });
+    // A lógica de Tabs foi removida para que 'Sobre' e 'Características' fiquem sempre ativas.
+    // Os botões permanecem para indicação visual, mas não alternam mais o conteúdo.
 
     // Botão Adotar
     {% if user.is_authenticated %}

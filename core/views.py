@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
+from django.db.models import Count # Importar Count
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
@@ -90,7 +91,7 @@ def load_animals(request):
     # Filtrando apenas animais disponíveis para adoção
     filters['status'] = 'DISPONIVEL'
     
-    animals = Animal.objects.filter(**filters).order_by('-entrada_instituicao')
+    animals = Animal.objects.filter(**filters).annotate(num_likes=Count('likes')).order_by('-num_likes', '-entrada_instituicao')
     paginator = Paginator(animals, 9)  # 9 animais por página
     page = paginator.get_page(page_number)
     
