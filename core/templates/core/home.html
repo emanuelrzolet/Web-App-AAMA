@@ -744,9 +744,9 @@
 				</div>
 
 				<div class="likes-section">
-					<button class="like-button" data-animal-id="${animal.id}">
-						<i class="far fa-heart"></i>
-					</button>
+					<span class="static-like-indicator">
+						<i class="${animal.likes_count > 0 ? 'fas' : 'far'} fa-heart"></i>
+					</span>
 					<span class="likes-count">${animal.likes_count || 0} likes</span>
 				</div>
 
@@ -820,9 +820,6 @@
 
 				loading = false;
 				document.getElementById("loading").classList.add("d-none");
-
-				// Initialize like buttons for new cards
-				initializeLikeButtons();
 			})
 			.catch((error) => {
 				console.error("Erro ao carregar animais:", error);
@@ -844,7 +841,7 @@
 	// Carrega os primeiros animais
 	document.addEventListener("DOMContentLoaded", () => {
 		loadAnimals(true); // Sempre reseta o grid ao carregar a página
-		initializeLikeButtons();
+		// initializeLikeButtons(); // Removido: likes.js agora usa delegação de eventos
 	});
 </script>
 {% endblock extra_js %}
