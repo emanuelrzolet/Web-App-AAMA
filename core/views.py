@@ -11,6 +11,9 @@ from django.views.decorators.csrf import csrf_protect
 def home(request):
     return render(request, 'core/home.html')
 
+def about(request):
+    return render(request, 'about/index.html')
+
 def animal_list(request):
     return render(request, 'core/animal_list.html')
 

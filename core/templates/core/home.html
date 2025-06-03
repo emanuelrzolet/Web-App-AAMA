@@ -42,22 +42,20 @@
 	}
 
 	.sticky-filter-btn {
-	position: sticky;
-	top: 0.5rem;
-	display: flex;
-	justify-content: flex-end;
-	z-index: 10;
-	background: transparent;
-}
-
-@media (max-width: 900px) {
-	.sticky-filter-btn {
-		top: 0.3rem;
-		padding-right: 0.5rem;
+		position: sticky;
+		top: 0.5rem;
+		display: flex;
+		justify-content: flex-end;
+		z-index: 10;
+		background: transparent;
 	}
-}
 
-
+	@media (max-width: 900px) {
+		.sticky-filter-btn {
+			top: 0.3rem;
+			padding-right: 0.5rem;
+		}
+	}
 
 	.filter-btn {
 		background: #ffd700;
@@ -246,9 +244,7 @@
 		</p>
 		<p>Adote! Explore os perfis de nossos cães e gatos.</p>
 		<div class="text-center">
-			<a href="#" class="btn btn-primary"
-				>Conhecer AAMA</a
-			>
+			<a href="{% url 'about' %}" class="btn btn-primary">Conhecer AAMA</a>
 		</div>
 	</div>
 
@@ -291,7 +287,7 @@
 
 	<div class="chat-message" id="animais-adocao">
 		<h2 class="h4 mb-3">Animais para Adoção</h2>
-		<div id="animal-grid-wrapper" style="position:relative;">
+		<div id="animal-grid-wrapper" style="position: relative">
 			<div class="filter-section sticky-filter-btn">
 				<button class="filter-btn" id="openFilters">
 					<i class="fas fa-filter"></i>
