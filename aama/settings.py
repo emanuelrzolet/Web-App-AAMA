@@ -81,7 +81,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',  # Required for allauth
-]
+    ]
 
 ROOT_URLCONF = 'aama.urls'
 
@@ -124,6 +124,11 @@ ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
 ACCOUNT_UNIQUE_EMAIL = True
 
 # Social account providers
+
+SOCIALACCOUNT_FORMS = {
+    'signup': 'usuarios.forms_social.SocialSignupForm',
+}
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {

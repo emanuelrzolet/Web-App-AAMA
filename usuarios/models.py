@@ -11,7 +11,7 @@ class AdotanteProfile(models.Model):
     telefone = models.CharField(max_length=20)
     profissao = models.CharField(max_length=100)
     estado_civil = models.CharField(max_length=20)
-    cpf = models.CharField(max_length=14, unique=True)
+    cpf = models.CharField(max_length=14, unique=True, blank=True, null=True)
 
     def __str__(self):
         return f"Adotante: {self.user.username} ({self.cpf})"
