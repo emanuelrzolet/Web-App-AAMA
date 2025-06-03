@@ -1,9 +1,9 @@
-{% extends 'core/base.html' %}
-{% load static %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<link rel="stylesheet" href="{% static 'css/animal_card.css' %}">
+{% extends 'core/base.html' %} {% load static %} {% block extra_css %}
+<link
+	rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+/>
+<link rel="stylesheet" href="{% static 'css/animal_card.css' %}" />
 <style>
 	#animal-grid {
 		display: grid;
@@ -18,14 +18,14 @@
 	}
 
 	.chat-message {
-		background: #1E1E1E;
+		background: #1e1e1e;
 		padding: 2rem;
 		border-radius: 12px;
 		margin-bottom: 2rem;
 	}
 
 	.chat-message h2 {
-		color: #FFD700;
+		color: #ffd700;
 		margin-bottom: 1rem;
 	}
 
@@ -41,9 +41,9 @@
 	}
 
 	.filter-btn {
-		background: #FFD700;
+		background: #ffd700;
 		border: none;
-		color: #1E1E1E;
+		color: #1e1e1e;
 		padding: 8px 16px;
 		border-radius: 20px;
 		cursor: pointer;
@@ -55,7 +55,7 @@
 	}
 
 	.filter-btn:hover {
-		background: #FFC800;
+		background: #ffc800;
 		transform: translateY(-1px);
 	}
 
@@ -82,7 +82,7 @@
 	}
 
 	.modal-content {
-		background: #1E1E1E;
+		background: #1e1e1e;
 		border-radius: 12px;
 		padding: 2rem;
 		width: 90%;
@@ -99,7 +99,7 @@
 	}
 
 	.modal-title {
-		color: #FFD700;
+		color: #ffd700;
 		margin: 0;
 		font-size: 1.5rem;
 	}
@@ -107,7 +107,7 @@
 	.close-modal {
 		background: none;
 		border: none;
-		color: #FFD700;
+		color: #ffd700;
 		font-size: 1.5rem;
 		cursor: pointer;
 		padding: 0;
@@ -118,7 +118,7 @@
 	}
 
 	.filter-group-title {
-		color: #FFD700;
+		color: #ffd700;
 		margin-bottom: 1rem;
 		font-size: 1.1rem;
 	}
@@ -140,9 +140,9 @@
 	}
 
 	.filter-option.selected {
-		background: #FFD700;
-		color: #1E1E1E;
-		border-color: #FFD700;
+		background: #ffd700;
+		color: #1e1e1e;
+		border-color: #ffd700;
 	}
 
 	.filter-option:hover {
@@ -150,7 +150,7 @@
 	}
 
 	.filter-option.selected:hover {
-		background: #FFC800;
+		background: #ffc800;
 	}
 
 	.modal-footer {
@@ -171,12 +171,12 @@
 	}
 
 	.apply-filters {
-		background: #FFD700;
-		color: #1E1E1E;
+		background: #ffd700;
+		color: #1e1e1e;
 	}
 
 	.apply-filters:hover {
-		background: #FFC800;
+		background: #ffc800;
 	}
 
 	.clear-filters {
@@ -196,8 +196,8 @@
 	}
 
 	.active-filter {
-		background: #FFD700;
-		color: #1E1E1E;
+		background: #ffd700;
+		color: #1e1e1e;
 		padding: 4px 12px;
 		border-radius: 15px;
 		font-size: 0.9rem;
@@ -210,17 +210,14 @@
 		background: none;
 		border: none;
 		padding: 0;
-		color: #1E1E1E;
+		color: #1e1e1e;
 		cursor: pointer;
 		font-size: 1.1em;
 		display: flex;
 		align-items: center;
 	}
 </style>
-{% endblock %}
-
-{% block title %}Início{% endblock title %}
-{% block content %}
+{% endblock %} {% block title %}Início{% endblock title %} {% block content %}
 <div class="chat-container">
 	<div class="welcome-message chat-message">
 		<h1 class="h3">Bem-vindo à AAMA</h1>
@@ -230,7 +227,9 @@
 		</p>
 		<p>Adote! Explore os perfis de nossos cães e gatos.</p>
 		<div class="text-center">
-			<a href="{% url 'animal_list' %}" class="btn btn-primary">Conhecer AAMA</a>
+			<a href="{% url 'animal_list' %}" class="btn btn-primary"
+				>Conhecer AAMA</a
+			>
 		</div>
 	</div>
 
@@ -238,18 +237,25 @@
 		<h2 class="h4 mb-3">Como ajudar?</h2>
 		<div class="help-options">
 			<div class="option mb-3">
-				<h3 class="h5">Adoção Responsável</h3>
+				<h3 class="h5">Indique nossa instituição na Nota Fiscal Gaucha</h3>
 				<p>
-					Você sabia que ao adotar um animal você está dando uma nova chance
-					para ele? Faça parte dessa mudança.
+					Você sabia que é possível ajudar nossa causa sem custo algum? Faça
+					cadastro na Nota Fiscal Gaucha e indique nossa instituição.
 				</p>
-				<a href="{% url 'animal_list' %}" class="btn btn-primary btn-sm">Saber mais</a>
+				<a href="#" class="btn btn-primary btn-sm">Saber mais</a>
+			</div>
+			<div class="option mb-3">
+				<h3 class="h5">Adote um peludinho!</h3>
+				<p>Adote! Explore os perfis de nossos aumiguinhos.</p>
+				<a href="{% url 'animal_list' %}" class="btn btn-primary btn-sm"
+					>Saber mais</a
+				>
 			</div>
 			<div class="option mb-3">
 				<h3 class="h5">Seja Voluntário</h3>
 				<p>
-					Temos diversas formas de você ajudar nossos amiguinhos. Venha fazer
-					parte do nosso time!
+					Venha fazer parte do nosso time de voluntários! O único requisito é
+					gostar dos peludos! Se você quer ajudar, chama a gente!
 				</p>
 				<a href="#" class="btn btn-primary btn-sm">Saber mais</a>
 			</div>
@@ -309,7 +315,7 @@
 			<h3 class="modal-title">Filtrar Animais</h3>
 			<button class="close-modal">&times;</button>
 		</div>
-		
+
 		<div class="filter-group">
 			<h4 class="filter-group-title">Tipo</h4>
 			<div class="filter-options" data-filter="tipo" data-multiple="true">
@@ -318,21 +324,25 @@
 			</div>
 		</div>
 
-		<div class="filter-group" id="racaCachorroGroup" style="display: none;">
+		<div class="filter-group" id="racaCachorroGroup" style="display: none">
 			<h4 class="filter-group-title">Raça de Cachorro</h4>
-			<div class="filter-options" data-filter="raca_cachorro" id="racaCachorroOptions">
+			<div
+				class="filter-options"
+				data-filter="raca_cachorro"
+				id="racaCachorroOptions"
+			>
 				<!-- Opções de raça de cachorro serão carregadas dinamicamente -->
 			</div>
 		</div>
 
-		<div class="filter-group" id="racaGatoGroup" style="display: none;">
+		<div class="filter-group" id="racaGatoGroup" style="display: none">
 			<h4 class="filter-group-title">Raça de Gato</h4>
 			<div class="filter-options" data-filter="raca_gato" id="racaGatoOptions">
 				<!-- Opções de raça de gato serão carregadas dinamicamente -->
 			</div>
 		</div>
 
-		<div class="filter-group" id="porteGroup" style="display: none;">
+		<div class="filter-group" id="porteGroup" style="display: none">
 			<h4 class="filter-group-title">Porte</h4>
 			<div class="filter-options" data-filter="porte">
 				<button class="filter-option" data-value="1">Pequeno</button>
@@ -388,9 +398,7 @@
 		</div>
 	</div>
 </div>
-{% endblock content %}
-
-{% block extra_js %}
+{% endblock content %} {% block extra_js %}
 <script src="{% static 'js/likes.js' %}"></script>
 <script>
 	let page = 1;
@@ -399,127 +407,126 @@
 	const filters = {};
 	const selectedTypes = new Set();
 
-	const modal = document.getElementById('filterModal');
-	const openFilterBtn = document.getElementById('openFilters');
-	const closeModalBtn = document.querySelector('.close-modal');
-	const applyFiltersBtn = document.querySelector('.apply-filters');
-	const clearFiltersBtn = document.querySelector('.clear-filters');
-	const activeFiltersContainer = document.getElementById('activeFilters');
-	const racaCachorroGroup = document.getElementById('racaCachorroGroup');
-	const racaGatoGroup = document.getElementById('racaGatoGroup');
-	const porteGroup = document.getElementById('porteGroup');
-	const racaCachorroOptions = document.getElementById('racaCachorroOptions');
-	const racaGatoOptions = document.getElementById('racaGatoOptions');
+	const modal = document.getElementById("filterModal");
+	const openFilterBtn = document.getElementById("openFilters");
+	const closeModalBtn = document.querySelector(".close-modal");
+	const applyFiltersBtn = document.querySelector(".apply-filters");
+	const clearFiltersBtn = document.querySelector(".clear-filters");
+	const activeFiltersContainer = document.getElementById("activeFilters");
+	const racaCachorroGroup = document.getElementById("racaCachorroGroup");
+	const racaGatoGroup = document.getElementById("racaGatoGroup");
+	const porteGroup = document.getElementById("porteGroup");
+	const racaCachorroOptions = document.getElementById("racaCachorroOptions");
+	const racaGatoOptions = document.getElementById("racaGatoOptions");
 
 	function loadCores() {
-		fetch('/get_cores/')
-			.then(response => response.json())
-			.then(data => {
-				console.log('Cores recebidas do backend:', data);
-				const corOptions = document.getElementById('corOptions');
-				corOptions.innerHTML = '';
+		fetch("/get_cores/")
+			.then((response) => response.json())
+			.then((data) => {
+				console.log("Cores recebidas do backend:", data);
+				const corOptions = document.getElementById("corOptions");
+				corOptions.innerHTML = "";
 				filterLabels.cor.values = {};
-				data.cores.forEach(cor => {
-					const button = document.createElement('button');
-					button.className = 'filter-option';
+				data.cores.forEach((cor) => {
+					const button = document.createElement("button");
+					button.className = "filter-option";
 					button.dataset.value = cor.value;
 					button.textContent = cor.label;
 					corOptions.appendChild(button);
 					filterLabels.cor.values[cor.value] = cor.label;
 				});
 				// Adiciona event listeners para as novas opções
-				corOptions.querySelectorAll('.filter-option').forEach(option => {
-					option.addEventListener('click', handleFilterOptionClick);
+				corOptions.querySelectorAll(".filter-option").forEach((option) => {
+					option.addEventListener("click", handleFilterOptionClick);
 				});
 			})
-			.catch(error => {
-				console.error('Erro ao carregar cores:', error);
+			.catch((error) => {
+				console.error("Erro ao carregar cores:", error);
 			});
 	}
 
-	openFilterBtn.addEventListener('click', () => {
+	openFilterBtn.addEventListener("click", () => {
 		loadCores();
-		modal.classList.add('show');
+		modal.classList.add("show");
 	});
-
 
 	const filterLabels = {
 		tipo: {
-			name: 'Tipo',
+			name: "Tipo",
 			values: {
-				'CACHORRO': 'Cachorro',
-				'GATO': 'Gato'
-			}
+				CACHORRO: "Cachorro",
+				GATO: "Gato",
+			},
 		},
 		raca_cachorro: {
-			name: 'Raça de Cachorro',
-			values: {}  // Será preenchido dinamicamente
+			name: "Raça de Cachorro",
+			values: {}, // Será preenchido dinamicamente
 		},
 		raca_gato: {
-			name: 'Raça de Gato',
-			values: {}  // Será preenchido dinamicamente
+			name: "Raça de Gato",
+			values: {}, // Será preenchido dinamicamente
 		},
 		porte: {
-			name: 'Porte',
+			name: "Porte",
 			values: {
-				'1': 'Pequeno',
-				'2': 'Médio',
-				'3': 'Grande'
-			}
+				1: "Pequeno",
+				2: "Médio",
+				3: "Grande",
+			},
 		},
 		idade: {
-			name: 'Idade',
+			name: "Idade",
 			values: {
-				'filhote': 'Filhote',
-				'adulto': 'Adulto',
-				'idoso': 'Sênior'
-			}
+				filhote: "Filhote",
+				adulto: "Adulto",
+				idoso: "Sênior",
+			},
 		},
 		pelagem: {
-			name: 'Pelagem',
+			name: "Pelagem",
 			values: {
-				'1': 'Curta',
-				'2': 'Média',
-				'3': 'Longa'
-			}
+				1: "Curta",
+				2: "Média",
+				3: "Longa",
+			},
 		},
 		cor: {
-			name: 'Cor',
-			values: {} // Será preenchido dinamicamente
+			name: "Cor",
+			values: {}, // Será preenchido dinamicamente
 		},
 		genero: {
-			name: 'Gênero',
+			name: "Gênero",
 			values: {
-				'M': 'Macho',
-				'F': 'Fêmea'
-			}
+				M: "Macho",
+				F: "Fêmea",
+			},
 		},
 		castrado: {
-			name: 'Castração',
+			name: "Castração",
 			values: {
-				'true': 'Castrado',
-				'false': 'Não Castrado'
-			}
-		}
+				true: "Castrado",
+				false: "Não Castrado",
+			},
+		},
 	};
 
 	function updateActiveFilters() {
-		activeFiltersContainer.innerHTML = '';
-		
+		activeFiltersContainer.innerHTML = "";
+
 		Object.entries(filters).forEach(([key, value]) => {
 			if (value) {
 				const filterLabel = filterLabels[key];
 				const displayValue = filterLabel.values[value];
-				
-				const filterTag = document.createElement('div');
-				filterTag.className = 'active-filter';
+
+				const filterTag = document.createElement("div");
+				filterTag.className = "active-filter";
 				filterTag.innerHTML = `
 					${filterLabel.name}: ${displayValue}
 					<button onclick="removeFilter('${key}')">
 						<i class="fas fa-times"></i>
 					</button>
 				`;
-				
+
 				activeFiltersContainer.appendChild(filterTag);
 			}
 		});
@@ -527,136 +534,152 @@
 
 	function removeFilter(filterKey) {
 		delete filters[filterKey];
-		const options = document.querySelectorAll(`.filter-options[data-filter="${filterKey}"] .filter-option`);
-		options.forEach(opt => opt.classList.remove('selected'));
+		const options = document.querySelectorAll(
+			`.filter-options[data-filter="${filterKey}"] .filter-option`
+		);
+		options.forEach((opt) => opt.classList.remove("selected"));
 		updateActiveFilters();
 		page = 1;
 		hasMore = true;
 		loadAnimals(true);
 	}
 
-	openFilterBtn.addEventListener('click', () => {
-		modal.classList.add('show');
+	openFilterBtn.addEventListener("click", () => {
+		modal.classList.add("show");
 	});
 
 	function closeModal() {
-		modal.classList.remove('show');
+		modal.classList.remove("show");
 	}
 
-	closeModalBtn.addEventListener('click', closeModal);
-	modal.addEventListener('click', (e) => {
+	closeModalBtn.addEventListener("click", closeModal);
+	modal.addEventListener("click", (e) => {
 		if (e.target === modal) closeModal();
 	});
 
 	// Prevent modal content clicks from closing the modal
-	modal.querySelector('.modal-content').addEventListener('click', (e) => {
+	modal.querySelector(".modal-content").addEventListener("click", (e) => {
 		e.stopPropagation();
 	});
 
 	function loadRacas(tipo, container) {
 		fetch(`/api/racas/?tipo=${tipo}`)
-			.then(response => response.json())
-			.then(data => {
-				container.innerHTML = '';
-				const filterKey = tipo === 'CACHORRO' ? 'raca_cachorro' : 'raca_gato';
+			.then((response) => response.json())
+			.then((data) => {
+				container.innerHTML = "";
+				const filterKey = tipo === "CACHORRO" ? "raca_cachorro" : "raca_gato";
 				filterLabels[filterKey].values = {};
-				
-				data.racas.forEach(raca => {
-					const button = document.createElement('button');
-					button.className = 'filter-option';
+
+				data.racas.forEach((raca) => {
+					const button = document.createElement("button");
+					button.className = "filter-option";
 					button.dataset.value = raca.id;
 					button.textContent = raca.nome;
 					container.appendChild(button);
-					
+
 					filterLabels[filterKey].values[raca.id] = raca.nome;
 				});
 
 				// Adicionar event listeners para as novas opções
-				container.querySelectorAll('.filter-option').forEach(option => {
-					option.addEventListener('click', handleFilterOptionClick);
+				container.querySelectorAll(".filter-option").forEach((option) => {
+					option.addEventListener("click", handleFilterOptionClick);
 				});
 			})
-			.catch(error => {
-				console.error('Erro ao carregar raças:', error);
+			.catch((error) => {
+				console.error("Erro ao carregar raças:", error);
 			});
 	}
 
 	function updateVisibility() {
-		racaCachorroGroup.style.display = selectedTypes.has('CACHORRO') ? 'block' : 'none';
-		racaGatoGroup.style.display = selectedTypes.has('GATO') ? 'block' : 'none';
-		porteGroup.style.display = selectedTypes.has('CACHORRO') ? 'block' : 'none';
+		racaCachorroGroup.style.display = selectedTypes.has("CACHORRO")
+			? "block"
+			: "none";
+		racaGatoGroup.style.display = selectedTypes.has("GATO") ? "block" : "none";
+		porteGroup.style.display = selectedTypes.has("CACHORRO") ? "block" : "none";
 
 		// Se o tipo Cachorro foi removido, limpar os filtros relacionados
-		if (!selectedTypes.has('CACHORRO')) {
-			delete filters['raca_cachorro'];
-			delete filters['porte'];
-			porteGroup.querySelectorAll('.filter-option').forEach(opt => opt.classList.remove('selected'));
-			racaCachorroOptions.querySelectorAll('.filter-option').forEach(opt => opt.classList.remove('selected'));
+		if (!selectedTypes.has("CACHORRO")) {
+			delete filters["raca_cachorro"];
+			delete filters["porte"];
+			porteGroup
+				.querySelectorAll(".filter-option")
+				.forEach((opt) => opt.classList.remove("selected"));
+			racaCachorroOptions
+				.querySelectorAll(".filter-option")
+				.forEach((opt) => opt.classList.remove("selected"));
 		}
 
 		// Se o tipo Gato foi removido, limpar os filtros relacionados
-		if (!selectedTypes.has('GATO')) {
-			delete filters['raca_gato'];
-			racaGatoOptions.querySelectorAll('.filter-option').forEach(opt => opt.classList.remove('selected'));
+		if (!selectedTypes.has("GATO")) {
+			delete filters["raca_gato"];
+			racaGatoOptions
+				.querySelectorAll(".filter-option")
+				.forEach((opt) => opt.classList.remove("selected"));
 		}
 	}
 
 	function handleFilterOptionClick() {
-		const filterGroup = this.closest('.filter-options');
+		const filterGroup = this.closest(".filter-options");
 		const filterType = filterGroup.dataset.filter;
-		const isMultiple = filterGroup.dataset.multiple === 'true';
-		
+		const isMultiple = filterGroup.dataset.multiple === "true";
+
 		if (isMultiple) {
 			// Toggle selection
-			if (this.classList.contains('selected')) {
-				this.classList.remove('selected');
+			if (this.classList.contains("selected")) {
+				this.classList.remove("selected");
 				selectedTypes.delete(this.dataset.value);
-				if (filterType === 'tipo') {
+				if (filterType === "tipo") {
 					delete filters[filterType];
 					if (selectedTypes.size > 0) {
 						filters[filterType] = Array.from(selectedTypes);
 					}
 				}
 			} else {
-				this.classList.add('selected');
+				this.classList.add("selected");
 				selectedTypes.add(this.dataset.value);
-				if (filterType === 'tipo') {
+				if (filterType === "tipo") {
 					filters[filterType] = Array.from(selectedTypes);
 				}
 			}
 
 			// Se é o tipo, atualizar visibilidade e carregar raças
-			if (filterType === 'tipo') {
+			if (filterType === "tipo") {
 				updateVisibility();
-				if (selectedTypes.has('CACHORRO') && racaCachorroOptions.children.length === 0) {
-					loadRacas('CACHORRO', racaCachorroOptions);
+				if (
+					selectedTypes.has("CACHORRO") &&
+					racaCachorroOptions.children.length === 0
+				) {
+					loadRacas("CACHORRO", racaCachorroOptions);
 				}
-				if (selectedTypes.has('GATO') && racaGatoOptions.children.length === 0) {
-					loadRacas('GATO', racaGatoOptions);
+				if (
+					selectedTypes.has("GATO") &&
+					racaGatoOptions.children.length === 0
+				) {
+					loadRacas("GATO", racaGatoOptions);
 				}
 			}
 		} else {
 			// Single selection behavior
-			if (this.classList.contains('selected')) {
-				this.classList.remove('selected');
+			if (this.classList.contains("selected")) {
+				this.classList.remove("selected");
 				delete filters[filterType];
 			} else {
-				filterGroup.querySelectorAll('.filter-option').forEach(opt => {
-					opt.classList.remove('selected');
+				filterGroup.querySelectorAll(".filter-option").forEach((opt) => {
+					opt.classList.remove("selected");
 				});
-				this.classList.add('selected');
+				this.classList.add("selected");
 				filters[filterType] = this.dataset.value;
 			}
 		}
 	}
 
 	// Filter option selection
-	document.querySelectorAll('.filter-option').forEach(option => {
-		option.addEventListener('click', handleFilterOptionClick);
+	document.querySelectorAll(".filter-option").forEach((option) => {
+		option.addEventListener("click", handleFilterOptionClick);
 	});
 
 	// Apply filters
-	applyFiltersBtn.addEventListener('click', () => {
+	applyFiltersBtn.addEventListener("click", () => {
 		closeModal();
 		updateActiveFilters();
 		page = 1;
@@ -665,31 +688,34 @@
 	});
 
 	// Clear filters
-	clearFiltersBtn.addEventListener('click', () => {
-		document.querySelectorAll('.filter-option').forEach(option => {
-			option.classList.remove('selected');
+	clearFiltersBtn.addEventListener("click", () => {
+		document.querySelectorAll(".filter-option").forEach((option) => {
+			option.classList.remove("selected");
 		});
-		Object.keys(filters).forEach(key => delete filters[key]);
+		Object.keys(filters).forEach((key) => delete filters[key]);
 		selectedTypes.clear();
 		updateVisibility();
 		updateActiveFilters();
 	});
 
 	function getIdadeCategoria(idade) {
-		if (idade <= 2) return 'Filhote';
-		if (idade <= 8) return 'Adulto';
-		return 'Sênior';
+		if (idade <= 2) return "Filhote";
+		if (idade <= 8) return "Adulto";
+		return "Sênior";
 	}
 
 	function createAnimalCard(animal) {
-		const idadeCategoria = getIdadeCategoria(Math.floor(animal.idade_aproximada/12));
-		
+		const idadeCategoria = getIdadeCategoria(
+			Math.floor(animal.idade_aproximada / 12)
+		);
+
 		return `
 		<div class="animal-card">
 			<div class="card-image">
-				${animal.foto_url 
-					? `<img src="${animal.foto_url}" alt="${animal.nome}" class="img-fluid">`
-					: `<img src="{% static 'images/no-photo.png' %}" alt="Sem foto" class="img-fluid">`
+				${
+					animal.foto_url
+						? `<img src="${animal.foto_url}" alt="${animal.nome}" class="img-fluid">`
+						: `<img src="{% static 'images/no-photo.png' %}" alt="Sem foto" class="img-fluid">`
 				}
 			</div>
 			<div class="card-content">
@@ -706,16 +732,28 @@
 				</div>
 
 				<p class="animal-description">
-					${animal.descricao || ''}
+					${animal.descricao || ""}
 				</p>
 
 				<div class="characteristics">
 					<span class="characteristic-badge idade">${idadeCategoria}</span>
 					<span class="characteristic-badge genero">${animal.genero}</span>
-					${animal.tipo === 'Cachorro' && animal.porte ? `<span class="characteristic-badge porte">${animal.porte}</span>` : ''}
+					${
+						animal.tipo === "Cachorro" && animal.porte
+							? `<span class="characteristic-badge porte">${animal.porte}</span>`
+							: ""
+					}
 					<span class="characteristic-badge pelo">Pelo ${animal.pelagem.toLowerCase()}</span>
-					${animal.cor ? `<span class="characteristic-badge cor">${animal.cor}</span>` : ''}
-					${animal.raca ? `<span class="characteristic-badge raca">${animal.raca}</span>` : ''}
+					${
+						animal.cor
+							? `<span class="characteristic-badge cor">${animal.cor}</span>`
+							: ""
+					}
+					${
+						animal.raca
+							? `<span class="characteristic-badge raca">${animal.raca}</span>`
+							: ""
+					}
 				</div>
 
 				<a href="/animal/${animal.id}/" class="conhecer-button">
@@ -732,13 +770,13 @@
 		document.getElementById("loading").classList.remove("d-none");
 
 		const params = new URLSearchParams();
-		params.append('page', page);
+		params.append("page", page);
 
 		// Adiciona os filtros aos parâmetros
 		Object.entries(filters).forEach(([key, value]) => {
 			if (Array.isArray(value)) {
 				// Para arrays (como tipo), adiciona múltiplos parâmetros
-				value.forEach(v => params.append(`${key}[]`, v));
+				value.forEach((v) => params.append(`${key}[]`, v));
 			} else {
 				params.append(key, value);
 			}
@@ -748,14 +786,14 @@
 			.then((response) => response.json())
 			.then((data) => {
 				const grid = document.getElementById("animal-grid");
-				
+
 				if (resetGrid) {
-					grid.innerHTML = '';
+					grid.innerHTML = "";
 				}
 
 				data.animals.forEach((animal) => {
 					const cardHtml = createAnimalCard(animal);
-					grid.insertAdjacentHTML('beforeend', cardHtml);
+					grid.insertAdjacentHTML("beforeend", cardHtml);
 				});
 
 				hasMore = data.has_next;
@@ -776,18 +814,18 @@
 
 	// Infinite scroll
 	window.addEventListener("scroll", () => {
-	if (
-		window.innerHeight + window.scrollY >=
-		document.documentElement.scrollHeight - 100
-	) {
-		loadAnimals();
-	}
-});
+		if (
+			window.innerHeight + window.scrollY >=
+			document.documentElement.scrollHeight - 100
+		) {
+			loadAnimals();
+		}
+	});
 
-// Carrega os primeiros animais
-document.addEventListener("DOMContentLoaded", () => {
-	loadAnimals(true); // Sempre reseta o grid ao carregar a página
-	initializeLikeButtons();
-});
+	// Carrega os primeiros animais
+	document.addEventListener("DOMContentLoaded", () => {
+		loadAnimals(true); // Sempre reseta o grid ao carregar a página
+		initializeLikeButtons();
+	});
 </script>
 {% endblock extra_js %}

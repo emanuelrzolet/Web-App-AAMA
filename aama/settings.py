@@ -37,8 +37,16 @@ ALLOWED_HOSTS = [
     
     # REMOVER ESSA LINHA QUANDO FOR PARA PRODUÇÃO e adicionar os hosts permitidos,
     '*',  # Permite todos os hosts durante o desenvolvimento
+    
+    'c66e-45-237-81-198.ngrok-free.app',  # URL do ngrok ou do seu domínio de produção
 ]
 
+# CSRF trusted origins
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'https://c66e-45-237-81-198.ngrok-free.app',  # URL do ngrok ou do seu domínio de produção
+]
 
 # Application definition
 
@@ -237,5 +245,3 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# AUTH_USER_MODEL antigo removido. Novo valor já está definido acima como 'usuarios.User'.
