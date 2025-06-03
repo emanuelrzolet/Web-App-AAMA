@@ -144,14 +144,77 @@
 		}
 	});
 	// Adicionar novo endereço (inline formset)
-	$("#add-endereco").on("click", function () {
-		var total = $("#id_endereco_set-TOTAL_FORMS");
-		var current = parseInt(total.val());
-		var empty = $(".endereco-form:last").clone(true);
-		empty.find("input").val("");
-		empty.find("input[type=hidden]").remove();
-		empty.insertAfter(".endereco-form:last");
-		total.val(current + 1);
+	$('#add-endereco').on('click', function() {
+	    var formsetPrefix = '{{ endereco_formset.prefix }}'; // Should be 'enderecos'
+	    var totalFormsInput = $('#id_' + formsetPrefix + '-TOTAL_FORMS');
+	    var currentTotalForms = parseInt(totalFormsInput.val());
+
+	    // Find the last form to clone. It's better if you have a clean template form.
+	    // For now, we clone the last form.
+	    var $lastForm = $('.endereco-form:last');
+	    if ($lastForm.length === 0) { // Handle case where no forms exist yet (only management form)
+            // This case needs a proper empty form template. For now, let's assume at least one form (extra=1) is always rendered.
+            // If extra=0 and no initial forms, this won't work without a template.
+            // Let's assume extra >= 1, so .endereco-form:last will usually exist.
+            // A robust solution involves a hidden template form.
+            console.error('Cannot add form: No existing form to clone and no template form defined.');
+            return;
+        }
+	    var $newForm = $lastForm.clone(true, true); // Clone with data and events
+
+	    // Clear values and update names/ids for the new form
+	    $newForm.find('input, select, textarea').each(function() {
+	        var $field = $(this);
+	        var name = $field.attr('name');
+	        var id = $field.attr('id');
+
+	        if (name) {
+	            name = name.replace(new RegExp(formsetPrefix + '-\d+-'), formsetPrefix + '-' + currentTotalForms + '-');
+	            $field.attr('name', name);
+	        }
+	        if (id) {
+	            id = id.replace(new RegExp('id_' + formsetPrefix + '-\d+-'), 'id_' + formsetPrefix + '-' + currentTotalForms + '-');
+	            $field.attr('id', id);
+	        }
+
+	        // Clear the value after updating name/id
+	        if ($field.is('input[type="text"], input[type="number"], input[type="email"], input[type="password"], textarea, input[type="date"], input[type="tel"], input[type="url"]')) {
+	            $field.val('');
+	        } else if ($field.is('input[type="checkbox"]') || $field.is('input[type="radio"]')) {
+	            $field.prop('checked', false);
+	        } else if ($field.is('select')) {
+	            $field.prop('selectedIndex', 0); // Reset select to the first option
+	        }
+
+            // Remove hidden ID field for the new form (it should not have a PK)
+            if (name && name.endsWith('-id')) {
+                $field.remove(); // Or $field.val(''); if it must exist, but usually removed
+            }
+	    });
+
+        // Update labels' `for` attributes
+        $newForm.find('label').each(function() {
+            var $label = $(this);
+            var oldFor = $label.attr('for');
+            if (oldFor) {
+                var newFor = oldFor.replace(new RegExp('id_' + formsetPrefix + '-\d+-'), 'id_' + formsetPrefix + '-' + currentTotalForms + '-');
+                $label.attr('for', newFor);
+            }
+        });
+
+	    // Remove the 'Apagar endereço' checkbox and its label for the new form
+	    // as it's a new entry and cannot be deleted from DB yet.
+	    $newForm.find('input[name$="-DELETE"]').closest('.form-check').remove();
+
+        // Clear any validation error messages from the cloned form
+        $newForm.find('.text-danger').remove();
+        $newForm.find('.alert-danger').remove();
+
+	    // Insert the new form after the last form
+	    $newForm.insertAfter($lastForm);
+
+	    // Increment TOTAL_FORMS value
+	    totalFormsInput.val(currentTotalForms + 1);
 	});
 </script>
 {% endblock %}

@@ -1,4 +1,5 @@
 from django import forms
+
 from django.contrib.auth.forms import UserCreationForm
 from .models import User, AdotanteProfile, Endereco
 
@@ -43,16 +44,25 @@ class AdotanteProfileForm(forms.ModelForm):
         # Validação simplificada, pode ser expandida
         return cpf
 
-class EnderecoForm(forms.ModelForm):
+class EnderecoForm(forms.ModelForm): # BaseEnderecoFormSet removed
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # If the form is bound (i.e., has data) and the delete checkbox for this form was checked in the POST data
+        if self.is_bound and self.data.get(f'{self.prefix}-DELETE'):
+            for field_name, field in self.fields.items():
+                field.required = False
+
     class Meta:
         model = Endereco
         fields = ['bairro', 'logradouro', 'numero', 'complemento', 'cep']
 
 EnderecoFormSet = forms.inlineformset_factory(
     AdotanteProfile, Endereco, form=EnderecoForm,
+
     fields=['bairro', 'logradouro', 'numero', 'complemento', 'cep'],
     extra=1, can_delete=True
 )
+
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
