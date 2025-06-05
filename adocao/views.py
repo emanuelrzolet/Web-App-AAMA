@@ -16,16 +16,20 @@ def criar_adocao(request):
     try:
         profile = request.user.adotante_profile
         if not all([profile.telefone, profile.profissao, profile.estado_civil, profile.cpf, profile.enderecos.exists()]) :
+            data = json.loads(request.body)
+            animal_id = data.get('animal_id')
             return JsonResponse({
                 'success': False, 
                 'error': 'Para se candidatar é necessário preencher os dados no perfil.',
-                'redirect_url': reverse('usuarios:profile') 
+                'redirect_url': reverse('usuarios:profile') + f'?next=/animal/{animal_id}/'
             })
     except AdotanteProfile.DoesNotExist:
+        data = json.loads(request.body)
+        animal_id = data.get('animal_id')
         return JsonResponse({
             'success': False, 
             'error': 'Para se candidatar é necessário preencher os dados no perfil.',
-            'redirect_url': reverse('usuarios:profile')
+            'redirect_url': reverse('usuarios:profile') + f'?next=/animal/{animal_id}/'
         })
 
     data = json.loads(request.body)
