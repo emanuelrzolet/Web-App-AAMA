@@ -32,6 +32,8 @@ def profile(request):
     if request.method == 'POST':
         adotante_form = AdotanteProfileForm(request.POST, instance=adotante, user=user)
         endereco_formset = EnderecoFormSet(request.POST, instance=adotante)
+        print('[DEBUG] adotante_form errors:', adotante_form.errors)
+        print('[DEBUG] endereco_formset errors:', endereco_formset.errors)
         if adotante_form.is_valid() and endereco_formset.is_valid():
             adotante_instance = adotante_form.save(commit=False)
             if not adotante_instance.pk: # Se é uma nova instância (sem pk)
@@ -41,17 +43,28 @@ def profile(request):
             endereco_formset.instance = adotante # Usa a instância de adotante (nova ou atualizada)
             endereco_formset.save()
             messages.success(request, 'Perfil atualizado com sucesso!')
+            next_url = request.POST.get('next') or request.GET.get('next')
+            print('[DEBUG] Valor de next_url ao salvar perfil:', next_url)
+            if next_url:
+                return redirect(next_url)
             return redirect('usuarios:profile') # Usar namespace
+        # Se não for válido, mantém o next do POST ou GET
+        next_url = request.POST.get('next') or request.GET.get('next')
     else:
         adotante_form = AdotanteProfileForm(instance=adotante, user=user)
         endereco_formset = EnderecoFormSet(instance=adotante)
+        next_url = request.GET.get('next')
 
     # Importação adiada para evitar import circular
     from adocao.models import Adocao
     solicitacoes_doacao = Adocao.objects.filter(usuario=user)
 
-    return render(request, 'profile.html', {
+    context = {
         'adotante_form': adotante_form,
         'endereco_formset': endereco_formset,
         'solicitacoes_doacao': solicitacoes_doacao,
-    })
+    }
+    if next_url:
+        context['next'] = next_url
+    return render(request, 'profile.html', context)
+

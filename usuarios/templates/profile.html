@@ -2,6 +2,9 @@
 <div class="container mt-4">
 	<h2>Perfil de Adotante</h2>
 	<form method="post">
+		{% if next %}
+		<input type="hidden" name="next" value="{{ next }}">
+		{% endif %}
 		{% csrf_token %}
 
 		<!-- Erros gerais do AdotanteForm -->
@@ -79,48 +82,46 @@
 					{% endfor %}
 				</div>
 			{% endif %}
-			{{ endereco_formset.management_form }} {% for form in endereco_formset %}
-        <div class="endereco-form border rounded p-2 mb-2">
-					{% if form.non_field_errors %}
-						<div class="alert alert-danger">
-							{% for error in form.non_field_errors %}
-								<p>{{ error }}</p>
-							{% endfor %}
-						</div>
-					{% endif %}
-          <div class="row">
-  <div class="col-md-4 mb-2">
-    {{ form.cep.label_tag }}
-    {{ form.cep }}
-					{% if form.cep.errors %}<div class="text-danger">{% for error in form.cep.errors %}{{ error }}{% endfor %}</div>{% endif %}
-  </div>
-  <div class="col-md-4 mb-2">
-    {{ form.logradouro.label_tag }}
-    {{ form.logradouro }}
-					{% if form.logradouro.errors %}<div class="text-danger">{% for error in form.logradouro.errors %}{{ error }}{% endfor %}</div>{% endif %}
-  </div>
-  <div class="col-md-2 mb-2">
-    {{ form.numero.label_tag }}
-    {{ form.numero }}
-					{% if form.numero.errors %}<div class="text-danger">{% for error in form.numero.errors %}{{ error }}{% endfor %}</div>{% endif %}
-  </div>
-  <div class="col-md-4 mb-2">
-    {{ form.bairro.label_tag }}
-    {{ form.bairro }}
-					{% if form.bairro.errors %}<div class="text-danger">{% for error in form.bairro.errors %}{{ error }}{% endfor %}</div>{% endif %}
-  </div>
-  <div class="col-md-4 mb-2">
-    {{ form.complemento.label_tag }}
-    {{ form.complemento }}
-					{% if form.complemento.errors %}<div class="text-danger">{% for error in form.complemento.errors %}{{ error }}{% endfor %}</div>{% endif %}
-  </div>
-</div>
-<div class="form-check">
-  {{ form.DELETE }} <label class="form-check-label">Apagar endereço</label>
-</div>
+			{{ endereco_formset.management_form }}
+{% with form=endereco_formset.forms.0 %}
+    <div class="endereco-form border rounded p-2 mb-2">
+        {{ form.id }} <!-- hidden id field para evitar erro de id obrigatório -->
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-md-4 mb-2">
+                {{ form.cep.label_tag }}
+                {{ form.cep }}
+                {% if form.cep.errors %}<div class="text-danger">{% for error in form.cep.errors %}{{ error }}{% endfor %}</div>{% endif %}
+            </div>
+            <div class="col-md-4 mb-2">
+                {{ form.logradouro.label_tag }}
+                {{ form.logradouro }}
+                {% if form.logradouro.errors %}<div class="text-danger">{% for error in form.logradouro.errors %}{{ error }}{% endfor %}</div>{% endif %}
+            </div>
+            <div class="col-md-2 mb-2">
+                {{ form.numero.label_tag }}
+                {{ form.numero }}
+                {% if form.numero.errors %}<div class="text-danger">{% for error in form.numero.errors %}{{ error }}{% endfor %}</div>{% endif %}
+            </div>
+            <div class="col-md-4 mb-2">
+                {{ form.bairro.label_tag }}
+                {{ form.bairro }}
+                {% if form.bairro.errors %}<div class="text-danger">{% for error in form.bairro.errors %}{{ error }}{% endfor %}</div>{% endif %}
+            </div>
+            <div class="col-md-4 mb-2">
+                {{ form.complemento.label_tag }}
+                {{ form.complemento }}
+                {% if form.complemento.errors %}<div class="text-danger">{% for error in form.complemento.errors %}{{ error }}{% endfor %}</div>{% endif %}
+            </div>
         </div>
-      {% endfor %}
-      <button type="button" id="add-endereco" class="btn btn-secondary">Adicionar Endereço</button>
+    </div>
+{% endwith %}
 		</fieldset>
 		<button type="submit" class="btn btn-primary">Salvar Perfil</button>
 	</form>

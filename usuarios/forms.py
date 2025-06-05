@@ -58,9 +58,8 @@ class EnderecoForm(forms.ModelForm): # BaseEnderecoFormSet removed
 
 EnderecoFormSet = forms.inlineformset_factory(
     AdotanteProfile, Endereco, form=EnderecoForm,
-
     fields=['bairro', 'logradouro', 'numero', 'complemento', 'cep'],
-    extra=1, can_delete=True
+    extra=1, max_num=1, can_delete=False, validate_max=True
 )
 
 
