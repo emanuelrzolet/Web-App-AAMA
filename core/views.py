@@ -206,8 +206,19 @@ def add_raca_gato(request):
         'error': 'Requisição inválida'
     }, status=400)
 
-@login_required
+from django.http import JsonResponse
+from django.urls import reverse
+from django.shortcuts import get_object_or_404
+from core.models import Animal, Like
+
+
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
 def toggle_like(request, animal_id):
+    if not request.user.is_authenticated:
+        login_url = reverse('account_login') + f'?next=/animal/{animal_id}/'
+        return JsonResponse({'login_url': login_url}, status=401)
     animal = get_object_or_404(Animal, id=animal_id)
     like, created = Like.objects.get_or_create(user=request.user, animal=animal)
     

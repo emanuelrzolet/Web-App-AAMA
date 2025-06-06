@@ -20,6 +20,75 @@ document.addEventListener('DOMContentLoaded', function () {
     // Escuta cliques no #animal-grid, mas só age se o clique foi em .like-button
     const animalGrid = document.getElementById('animal-grid');
 
+    // Suporte ao botão de like na página de detalhes do animal
+    const detailLikeButton = document.querySelector('.like-button[data-animal-id]');
+    if (detailLikeButton) {
+        detailLikeButton.addEventListener('click', function (event) {
+            event.preventDefault();
+            console.log('Like button (detalhe) clicado!');
+            const animalId = detailLikeButton.dataset.animalId;
+            console.log('Enviando fetch para toggle-like:', animalId);
+            fetch(`/animal/${animalId}/toggle-like/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                console.log('Status da resposta:', response.status);
+                if (response.status === 401 || response.status === 403) {
+                    return response.json().then(data => {
+                        console.log('Dados recebidos para login:', data);
+                        if (data.login_url) {
+                            console.log('Redirecionando para:', data.login_url);
+                            window.location.href = data.login_url;
+                        } else {
+                            alert('Você precisa estar logado para curtir. Redirecionando para login.');
+                            window.location.href = '/accounts/login/';
+                        }
+                        return Promise.reject('Redirecting to login');
+                    }).catch((e) => {
+                        console.log('Erro ao fazer parse do JSON:', e);
+                        alert('Você precisa estar logado para curtir. Redirecionando para login.');
+                        window.location.href = '/accounts/login/';
+                        return Promise.reject('Redirecting to login');
+                    });
+                }
+                if (!response.ok) {
+                    throw new Error('Falha ao curtir o animal. Status: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Atualize o ícone e contagem se desejar
+                if (data.liked !== undefined) {
+                    const heartIcon = detailLikeButton.querySelector('i');
+                    const likesCountSpan = detailLikeButton.querySelector('.like-count');
+
+                    if (data.liked) {
+                        heartIcon.classList.remove('far');
+                        heartIcon.classList.add('fas', 'liked-heart');
+                    } else {
+                        heartIcon.classList.remove('fas', 'liked-heart');
+                        heartIcon.classList.add('far');
+                    }
+                    if (likesCountSpan) {
+                        likesCountSpan.textContent = data.likes_count || 0;
+                    }
+                }
+            })
+            .catch(error => {
+                if (error !== 'Redirecting to login') {
+                    console.error('Erro ao tentar curtir:', error);
+                }
+            })
+            .catch(error => {
+                console.error('Erro global no fetch do like:', error);
+            });
+        });
+    }
+
     if (animalGrid) {
         animalGrid.addEventListener('click', function (event) {
             const likeButton = event.target.closest('.like-button');
@@ -53,13 +122,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         } else {
                             // Fallback se login_url não estiver presente
                             alert('Você precisa estar logado para curtir. Redirecionando para login.');
-                            window.location.href = '/login/'; // Ou sua URL de login padrão
+                            window.location.href = '/accounts/login/'; // Ou sua URL de login padrão
                         }
                         return Promise.reject('Redirecting to login'); // Previne processamento adicional
                     }).catch(() => {
                         // Fallback se a resposta não for JSON ou não tiver login_url
                         alert('Você precisa estar logado para curtir. Redirecionando para login.');
-                        window.location.href = '/login/'; // Ou sua URL de login padrão
+                        window.location.href = '/accounts/login/'; // Ou sua URL de login padrão
                         return Promise.reject('Redirecting to login');
                     });
                 }
