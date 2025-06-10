@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						<i class="fas fa-heart me-2"></i>Quero Adotar
 					</button>
 				{% else %}
-					<a href="{% url 'account_login' %}" class="adoption-button text-center text-decoration-none">
+					<a href="{% url 'account_login' %}?next={{ request.path }}" class="adoption-button text-center text-decoration-none">
 						<i class="fas fa-sign-in-alt me-2"></i>Faça login para adotar
 					</a>
 				{% endif %}

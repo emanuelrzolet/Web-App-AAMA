@@ -29,7 +29,7 @@
                         {% if socialaccount_providers %}
                             {% for provider in socialaccount_providers %}
                                 {% if provider.id == "google" %}
-                                    <a href="{% provider_login_url provider.id %}" class="btn btn-outline-danger w-75">
+                                    <a href="{% provider_login_url provider.id process='login' next=redirect_field_value|default:'/' %}" class="btn btn-outline-danger w-75">
                                         <i class="fab fa-google me-2"></i>Entrar com Google
                                     </a>
                                 {% endif %}
