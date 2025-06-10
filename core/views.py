@@ -39,17 +39,26 @@ def animal_detail(request, pk):
     })
 
 def load_animals(request):
+    print('DEBUG GET tipo[]:', request.GET.getlist('tipo[]'))
+    print('DEBUG GET tipo:', request.GET.getlist('tipo'))
     page_number = request.GET.get('page', 1)
     filters = {}
     
     # Aplicando filtros
     tipo = request.GET.getlist('tipo[]')
     if tipo:
-        if len(tipo) == 1:
-            filters['tipo'] = tipo[0]
-        else:
-            filters['tipo__in'] = tipo
-        
+        tipo = [t.lower() for t in tipo if t]
+        tipo_variants = tipo + [t.upper() for t in tipo]
+        if len(tipo_variants) == 1:
+            filters['tipo'] = tipo_variants[0]
+        elif len(tipo_variants) > 1:
+            filters['tipo__in'] = tipo_variants
+    
+    print('DEBUG filtros aplicados:', filters)
+    animals = Animal.objects.filter(**filters)
+    print('DEBUG queryset:', animals.query)
+    # Continue o restante da lógica usando a variável 'animals'
+    
     idade = request.GET.get('idade')
     if idade:
         if idade == 'filhote':
@@ -101,7 +110,8 @@ def load_animals(request):
             {
                 'id': animal.id,
                 'nome': animal.nome,
-                'tipo': animal.get_tipo_display(),
+                'tipo': animal.tipo,
+                'tipo_display': animal.get_tipo_display(),
                 'idade_aproximada': animal.idadeEstimada * 12 if animal.idadeEstimada else 0,
                 'foto_url': animal.foto_principal.url if animal.foto_principal else None,
                 'descricao': animal.descricao or '',
